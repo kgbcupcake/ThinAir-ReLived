@@ -2,6 +2,7 @@ package dev.maire.thinair;
 
 import dev.maire.thinair.handler.AirBubbleTracker;
 import dev.maire.thinair.handler.DrownedAttackHandler;
+import dev.maire.thinair.handler.ReinforcedBladderCraftHandler;
 import dev.maire.thinair.handler.TickAirHandler;
 import dev.maire.thinair.init.ModRegistry;
 import dev.maire.thinair.world.level.block.SignalTorchBlock;
@@ -21,6 +22,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.ChunkWatchEvent;
@@ -74,6 +76,11 @@ public class ThinAirForgeEvents {
     @SubscribeEvent
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
         DrownedAttackHandler.onLivingIncomingDamage(event);
+    }
+
+    @SubscribeEvent
+    public static void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
+        ReinforcedBladderCraftHandler.onItemCrafted(event);
     }
 
     @SubscribeEvent
