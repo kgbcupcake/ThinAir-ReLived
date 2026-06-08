@@ -1,8 +1,8 @@
-# Thin Air — NeoForge 1.21.1
+# Thin Air NeoForge 1.21.1
 
 A faithful NeoForge port of **[Thin Air](https://modrinth.com/mod/thin-air/versions)** by fuzs. The air is not always breathable deep underground and in other dimensions.
 
-The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/versions) (last release: Minecraft 1.20.4). This project brings it forward to **Minecraft 1.21.1** on NeoForge while staying close to the upstream design — not a ground-up rewrite.
+The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/versions) (last release: Minecraft 1.20.4). This project brings it forward to **Minecraft 1.21.1** on NeoForge while staying close to the upstream design  not a ground-up rewrite.
 
 ## About the original
 
@@ -18,15 +18,15 @@ This is a **direct port** of fuzs's 1.20.4 codebase and data, updated for NeoFor
 
 Design choices for this port:
 
-- **Server-authoritative config** — settings live in `thinair-server.toml` under each world's `serverconfig/` folder, not in a client-side menu that can override the server.
-- **Optional Curios integration** — the respirator uses the Curios head slot when Curios is installed; the mod works without it.
-- **No bundled mod compatibility layers** — Create and other mods are not baked in; compatibility stays optional and separate.
+- **Server-authoritative config** settings live in `thinair-server.toml` under each world's `serverconfig/` folder, not in a client-side menu that can override the server.
+- **Optional Curios integration** the respirator uses the Curios head slot when Curios is installed; the mod works without it.
+- **No bundled mod compatibility layers** Create and other mods are not baked in; compatibility stays optional and separate.
 
 There is **no in-game config screen**, same as the original mod. Edit the TOML file to change behavior.
 
 ## Features
 
-Air quality varies by dimension and height. Four levels — green, yellow, red, and blue — affect how entities breathe and what equipment helps.
+Air quality varies by dimension and height. Four levels [green, yellow, red, and blue] affect how entities breathe and what equipment helps.
 
 **Blocks**
 
@@ -109,7 +109,7 @@ Generate data (when datagen providers are added):
 Work still in progress compared to the original 1.20.4 release:
 
 - **Reinforced Air Bladder** crafting recipe not yet ported (requires the custom copy-tag shapeless recipe from upstream)
-- **In-game config UI** not planned — file-based config only, matching the original
+- **In-game config UI** not planned file-based config only, matching the original
 - Full parity testing (multiplayer, loot, advancements, worldgen-placed air providers) is ongoing
 
 Report issues on this repository if something does not match the original mod's behavior.
