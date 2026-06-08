@@ -1,108 +1,54 @@
-# Thin Air NeoForge 1.21.1
+# Thin Air — NeoForge 1.21.1 Port
 
-A faithful NeoForge port of **[Thin Air](https://modrinth.com/mod/thin-air/versions)** by fuzs. The air is not always breathable deep underground and in other dimensions.
+A faithful NeoForge port of [fuzs's Thin Air](https://modrinth.com/mod/thin-air). The air is not always breathable deep underground and in other dimensions.
 
-The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/versions) (last release: Minecraft 1.20.4). This project brings it forward to **Minecraft 1.21.1** on NeoForge while staying close to the upstream design  not a ground-up rewrite.
+The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/versions) (last release: Minecraft 1.20.4). This fork brings it forward to **Minecraft 1.21.1** on NeoForge while staying close to the upstream design (not a ground-up rewrite) with some features added.
 
-## About the original
+> ⚠️ Please report bugs for this port **only** in [this repository's issue tracker](https://github.com/kgbcupcake/Thin_Air_1.21.1_Port/issues). Do not contact fuzs about issues specific to this port.
 
-| | |
-|---|---|
-| **Mod** | [Thin Air on Modrinth](https://modrinth.com/mod/thin-air/versions) |
-| **Author** | [fuzs](https://modrinth.com/mod/thin-air) |
-| **License** | MIT |
+---
 
-## About this port
+## What's Different
 
-This is a **direct port** of fuzs's 1.20.4 codebase and data, updated for NeoForge 1.21.1 APIs and datapack path changes (`recipe/`, `advancement/`, `loot_table/`, and so on).
+- **NeoForge-only**: Direct port of the 1.20.4 codebase and data, updated for NeoForge 1.21.1 APIs and datapack path changes (`recipe/`, `advancement/`, `loot_table/`, and so on).
+- **Server-authoritative config**: Settings live in `thinair-server.toml` under each world's `serverconfig/` folder; no in-game config screen (same as the original).
+- **Optional Curios**:Respirator uses the Curios head slot when [Curios](https://modrinth.com/mod/curios) is installed; the mod works without it.
+- **No bundled compatibility layers**: Create and other mods are not baked in; compatibility stays optional and separate.
+- **Work in progress**: Reinforced Air Bladder crafting recipe not yet ported; full parity testing is ongoing.
 
-Design choices for this port:
-
-- **Server-authoritative config** settings live in `thinair-server.toml` under each world's `serverconfig/` folder, not in a client-side menu that can override the server.
-- **Optional Curios integration** the respirator uses the Curios head slot when Curios is installed; the mod works without it.
-- **No bundled mod compatibility layers** Create and other mods are not baked in; compatibility stays optional and separate.
-
-There is **no in-game config screen**, same as the original mod. Edit the TOML file to change behavior.
+---
 
 ## Features
 
-Air quality varies by dimension and height. Four levels [green, yellow, red, and blue] affect how entities breathe and what equipment helps.
+- **Air quality levels**: Green, yellow, red, and blue air affect breathing and what equipment helps, by dimension and height.
+- **Safety Lantern**: Shows nearby air quality by color; can be dyed and scraped with an axe.
+- **Signal Torch**: Right-click to emit particles (configurable).
+- **Respirator**: Protects against choking air (Curios head slot when available).
+- **Air Bladder** / **Reinforced Air Bladder**: Portable air refill.
+- **Bottle of Soulfire**: Emergency air restore in the Nether.
+- Advancements, recipes, loot injections, drowned air-drain behavior, chunk air-quality sync, and English / Russian / Chinese lang files.
 
-**Blocks**
+### Blocks
 
-- **Safety Lantern** — shows nearby air quality by color; can be dyed and scraped with an axe
-- **Signal Torch** — right-click to emit particles (configurable)
+- **Safety Lantern**: shows nearby air quality by color; can be dyed and scraped with an axe
+- **Signal Torch**: right-click to emit particles (configurable)
 
-**Items**
+### Items
 
-- **Respirator** — protects against choking air (Curios head slot when available)
-- **Air Bladder** / **Reinforced Air Bladder** — portable air refill
-- **Bottle of Soulfire** — emergency air restore in the Nether
+- **Respirator**: protects against choking air (Curios head slot when available)
+- **Air Bladder** / **Reinforced Air Bladder**: portable air refill
+- **Bottle of Soulfire**: emergency air restore in the Nether
 
-Also included: advancements, recipes, loot table injections, air-provider block tags, drowned air-drain behavior, chunk air-quality sync, and English / Russian / Chinese lang files.
+### Advancements
 
-## Requirements
-
-| | Version |
-|---|---|
-| Minecraft | 1.21.1 |
-| NeoForge | 21.1.x |
-| Java | 21 |
-| [Curios](https://modrinth.com/mod/curios) | optional (9.5.1+1.21.1) |
-
-## Installation
-
-1. Install NeoForge for Minecraft 1.21.1.
-2. Download or build `thinair-*.jar` from [Releases](https://github.com/) *(add your repo URL when published)*.
-3. Place the JAR in your instance `mods/` folder.
-4. Optionally add Curios for respirator slot support.
-
-## Configuration
-
-After launching a world once, edit:
-
-```
-<world>/serverconfig/thinair-server.toml
-```
-
-On a dedicated server:
-
-```
-world/serverconfig/thinair-server.toml
-```
-
-Notable options:
-
-- **`dimensions`** — air quality by dimension and Y level (e.g. overworld yellow below Y 128, nether yellow everywhere, end red)
-- **`enableSignalTorches`** — toggle signal-torch particle effect
-- **`drownedChoking`** — air removed per drowned hit (0 to disable)
-- **`Ranges`** — bubble radius for yellow, blue, red, and green air-provider blocks
-
-Changes apply on world reload or server restart depending on your setup.
-
-## Development
-
-Clone the repo and build:
-
-```bash
-./gradlew build
-```
-
-Output: `build/libs/thinair-1.0.0.jar`
-
-Run the client in the dev environment:
-
-```bash
-./gradlew runClient
-```
-
-Mod branding assets (launcher icon) live in [`Assets/mod_logo.png`](Assets/mod_logo.png) and are copied into the JAR at build time.
-
-Generate data (when datagen providers are added):
-
-```bash
-./gradlew runData
-```
+- **Air Bladder**: use an Air Bladder to refill your air supply on the go
+- **Blue Air**: breathe the life force given off by Soul Fire to maintain your air (but not increase it!)
+- **Disco Lantern**: use a piece of Dye to manually change the color of a Safety Lamp (you can scrape the color off with an axe)
+- **Respirator**: protect yourself from choking air with something like a Respirator
+- **Safety Lantern** — use a Safety Lantern to check the air quality around you
+- **Signal Torch**: right-click a torch to make it spew particles, perhaps to signal the exit of a cave
+- **Soulfire Bottle**: restore your lungs with the souls trapped in a Bottle of Soulfire
+- **Water Breathing**: breathe freely where there is no air at all
 
 ## Known limitations
 
@@ -112,14 +58,46 @@ Work still in progress compared to the original 1.20.4 release:
 - **In-game config UI** not planned file-based config only, matching the original
 - Full parity testing (multiplayer, loot, advancements, worldgen-placed air providers) is ongoing
 
-Report issues on this repository if something does not match the original mod's behavior.
+## Technical Info
+
+|           |          |
+| --------- | -------- |
+| Loader    | NeoForge |
+| Minecraft | 1.21.1   |
+| Java      | 21       |
+
+Optional: [Curios](https://modrinth.com/mod/curios) 9.5.1+1.21.1 (respirator slot).
+
+---
+
+## Installation
+
+1. Install [NeoForge](https://neoforged.net/) for Minecraft 1.21.1.
+2. Download or build `thinair-*.jar` from [Releases](https://github.com/kgbcupcake/Thin_Air_1.21.1_Port/releases).
+3. Drop the mod `.jar` into your `mods/` folder.
+4. Optionally install [Curios](https://modrinth.com/mod/curios) for respirator slot support.
+5. Launch the game.
+
+After the first launch, edit `<world>/serverconfig/thinair-server.toml` to change air quality, signal torches, drowned choking, and air-provider bubble ranges.
+
+---
 
 ## Credits
 
-| Role | |
-|---|---|
-| Original mod | [fuzs](https://modrinth.com/mod/thin-air) |
-| 1.21.1 NeoForge port | Marie |
+| Role                 | Author                                              |
+| -------------------- | --------------------------------------------------- |
+| Original mod         | [fuzs](https://modrinth.com/mod/thin-air)           |
+| 1.21.1 NeoForge port | [Marie (kgbcupcake)](https://github.com/kgbcupcake) |
+
+---
+
+## References
+
+- [Original mod on Modrinth](https://modrinth.com/mod/thin-air)
+- [Original source](https://github.com/Fuzss/thinair)
+- [Curios](https://modrinth.com/mod/curios)
+
+---
 
 ## License
 
