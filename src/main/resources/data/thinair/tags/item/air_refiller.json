@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "thinair:air_bladder",
+    "thinair:reinforced_air_bladder",
+    "thinair:soulfire_bottle"
+  ]
+}

@@ -1,0 +1,36 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+description = '''${mod_description}'''
+authors = "${mod_authors}"
+logoFile = "mod_logo.png"
+logoBlur = false
+
+[[mixins]]
+config = "thinair.mixins.json"
+
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neo_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "curios"
+type = "optional"
+versionRange = "[1.0,)"
+ordering = "NONE"
+side = "BOTH"
