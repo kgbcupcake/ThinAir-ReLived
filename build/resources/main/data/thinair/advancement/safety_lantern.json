@@ -1,0 +1,51 @@
+{
+  "parent": "thinair:root",
+  "criteria": {
+    "breathe_bad_air": {
+      "conditions": {
+        "air_qualities": [
+          "yellow",
+          "red"
+        ]
+      },
+      "trigger": "thinair:breathe_air"
+    },
+    "has_safety_lantern": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "thinair:safety_lantern"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.thinair.safety_lantern.description"
+    },
+    "icon": {
+      "id": "thinair:safety_lantern",
+      "components": {
+        "minecraft:custom_data": {
+          "thinair.air_quality_level": 0
+        }
+      }
+    },
+    "title": {
+      "translate": "advancements.thinair.safety_lantern.title"
+    }
+  },
+  "requirements": [
+    [
+      "breathe_bad_air"
+    ],
+    [
+      "has_safety_lantern"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

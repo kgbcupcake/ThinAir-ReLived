@@ -1,0 +1,45 @@
+{
+  "parent": "thinair:respirator",
+  "criteria": {
+    "breathe_red_air": {
+      "conditions": {
+        "air_qualities": [
+          "red"
+        ]
+      },
+      "trigger": "thinair:breathe_air"
+    },
+    "has_water_breathing": {
+      "conditions": {
+        "effects": {
+          "minecraft:water_breathing": {}
+        }
+      },
+      "trigger": "minecraft:effects_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.thinair.water_breathing.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "id": "minecraft:potion",
+      "components": {
+        "minecraft:potion_contents": "minecraft:water_breathing"
+      }
+    },
+    "title": {
+      "translate": "advancements.thinair.water_breathing.title"
+    }
+  },
+  "requirements": [
+    [
+      "breathe_red_air"
+    ],
+    [
+      "has_water_breathing"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,93 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - ThinAir",
+        "order": 0
+      },
+      "projectName": "ThinAir",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/home/only/RiderProjects/ThinAir_1.21.1_Port/build/moddev/clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/home/only/RiderProjects/ThinAir_1.21.1_Port/build/moddev/clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dthinair%%/home/only/RiderProjects/ThinAir_1.21.1_Port/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Data",
+      "presentation": {
+        "group": "Mod Development - ThinAir",
+        "order": 1
+      },
+      "projectName": "ThinAir",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/home/only/RiderProjects/ThinAir_1.21.1_Port/build/moddev/dataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/home/only/RiderProjects/ThinAir_1.21.1_Port/build/moddev/dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dthinair%%/home/only/RiderProjects/ThinAir_1.21.1_Port/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "GameTestServer",
+      "presentation": {
+        "group": "Mod Development - ThinAir",
+        "order": 2
+      },
+      "projectName": "ThinAir",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/home/only/RiderProjects/ThinAir_1.21.1_Port/build/moddev/gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/home/only/RiderProjects/ThinAir_1.21.1_Port/build/moddev/gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dthinair%%/home/only/RiderProjects/ThinAir_1.21.1_Port/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - ThinAir",
+        "order": 3
+      },
+      "projectName": "ThinAir",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/home/only/RiderProjects/ThinAir_1.21.1_Port/build/moddev/serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/home/only/RiderProjects/ThinAir_1.21.1_Port/build/moddev/serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dthinair%%/home/only/RiderProjects/ThinAir_1.21.1_Port/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}
