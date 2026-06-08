@@ -13,11 +13,24 @@
       "conditions": {
         "items": [
           {
-            "tag": "thinair:breathing_equipment"
+            "items": "thinair:respirator"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
+    },
+    "equipped_breathing_equipment": {
+      "conditions": {
+        "item": {
+          "items": "thinair:respirator"
+        },
+        "curios:slot": {
+          "slots": [
+            "head"
+          ]
+        }
+      },
+      "trigger": "curios:equip_curio"
     }
   },
   "display": {
@@ -39,7 +52,8 @@
       "breathe_yellow_air"
     ],
     [
-      "has_breathing_equipment"
+      "has_breathing_equipment",
+      "equipped_breathing_equipment"
     ]
   ],
   "sends_telemetry_event": true

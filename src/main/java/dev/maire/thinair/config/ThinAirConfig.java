@@ -3,6 +3,7 @@ package dev.maire.thinair.config;
 import dev.maire.thinair.ThinAir;
 import dev.maire.thinair.api.AirQualityLevel;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
@@ -16,14 +17,17 @@ import java.util.Map;
 
 public class ThinAirConfig {
     public static final ModConfigSpec SPEC;
-    public static ModConfigSpec.ConfigValue<List<? extends String>> dimensions;
-    public static ModConfigSpec.BooleanValue enableSignalTorches;
-    public static ModConfigSpec.IntValue drownedChoking;
-    public static ModConfigSpec.DoubleValue blueAirProviderRadius;
-    public static ModConfigSpec.DoubleValue redAirProviderRadius;
-    public static ModConfigSpec.DoubleValue yellowAirProviderRadius;
-    public static ModConfigSpec.DoubleValue greenAirProviderRadius;
+    private static ThinAirConfig INSTANCE;
+    private static ModConfig boundConfig;
     private static Map<ResourceLocation, DimensionEntry> dimensionEntries = null;
+
+    private ModConfigSpec.ConfigValue<List<? extends String>> dimensions;
+    private ModConfigSpec.BooleanValue enableSignalTorches;
+    private ModConfigSpec.IntValue drownedChoking;
+    private ModConfigSpec.DoubleValue blueAirProviderRadius;
+    private ModConfigSpec.DoubleValue redAirProviderRadius;
+    private ModConfigSpec.DoubleValue yellowAirProviderRadius;
+    private ModConfigSpec.DoubleValue greenAirProviderRadius;
 
     static {
         Pair<ThinAirConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ThinAirConfig::new);
@@ -31,6 +35,8 @@ public class ThinAirConfig {
     }
 
     public ThinAirConfig(ModConfigSpec.Builder builder) {
+        INSTANCE = this;
+
         dimensions = builder.comment("Air qualities at different heights in different dimensions.",
                         "The syntax is the dimension's resource location, the \"default\" air level in that dimension,",
                         "then any number of height:airlevel pairs separated by commas.",
@@ -67,6 +73,73 @@ public class ThinAirConfig {
                         "The radius in which all blocks defined in the green air providers tag (usually various portal blocks) project a bubble of air around them.")
                 .defineInRange("greenAirProviderRadius", 9.0, 1.0, 32.0);
         builder.pop();
+    }
+
+    public static ThinAirConfig get() {
+        return INSTANCE;
+    }
+
+    public static void bind(ModConfig config) {
+        if (config.getSpec() == SPEC) {
+            boundConfig = config;
+        }
+    }
+
+    public static void saveNow() {
+        if (boundConfig != null) {
+            var loadedConfig = boundConfig.getLoadedConfig();
+            if (loadedConfig != null) {
+                loadedConfig.save();
+            }
+        }
+    }
+
+    public boolean enableSignalTorches() {
+        return enableSignalTorches.get();
+    }
+
+    public void setEnableSignalTorches(boolean value) {
+        enableSignalTorches.set(value);
+    }
+
+    public int drownedChoking() {
+        return drownedChoking.get();
+    }
+
+    public void setDrownedChoking(int value) {
+        drownedChoking.set(value);
+    }
+
+    public double yellowAirProviderRadius() {
+        return yellowAirProviderRadius.get();
+    }
+
+    public void setYellowAirProviderRadius(double value) {
+        yellowAirProviderRadius.set(value);
+    }
+
+    public double blueAirProviderRadius() {
+        return blueAirProviderRadius.get();
+    }
+
+    public void setBlueAirProviderRadius(double value) {
+        blueAirProviderRadius.set(value);
+    }
+
+    public double redAirProviderRadius() {
+        return redAirProviderRadius.get();
+    }
+
+    public void setRedAirProviderRadius(double value) {
+        redAirProviderRadius.set(value);
+    }
+
+    public double greenAirProviderRadius() {
+        return greenAirProviderRadius.get();
+    }
+
+    public void setGreenAirProviderRadius(double value) {
+        greenAirProviderRadius.set(value);
     }
 
     public static void invalidateCache() {
@@ -148,9 +221,9 @@ public class ThinAirConfig {
 
     public static AirQualityLevel getAirQualityAtLevelByDimension(ResourceLocation dimension, int y) {
         if (dimensionEntries == null) {
-            var lines = dimensions.get();
+            var lines = INSTANCE.dimensions.get();
             dimensionEntries = new HashMap<>(lines.size());
-            for (var line : dimensions.get()) {
+            for (var line : INSTANCE.dimensions.get()) {
                 var entry = parseDimensionLine(line);
                 if (entry == null) {
                     ThinAir.LOGGER.warn("Somehow managed to get a bad dimension config past the validator?!");

@@ -70,11 +70,16 @@ repositories {
         name = 'Curios'
         url = 'https://maven.theillusivec4.top/'
     }
+    maven {
+        name = 'Shedaniel'
+        url = 'https://maven.shedaniel.me/'
+    }
 }
 
 dependencies {
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
     localRuntime "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+    implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
 }
 
 tasks.named('processResources', ProcessResources).configure {

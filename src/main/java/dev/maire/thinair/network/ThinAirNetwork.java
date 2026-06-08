@@ -14,5 +14,11 @@ public class ThinAirNetwork {
                 ClientboundChunkAirQualityPacket.CODEC,
                 ClientboundChunkAirQualityPacket::handle
         );
+
+        registrar.playToClient(
+                ClientboundPlayerAirQualityPacket.TYPE,
+                ClientboundPlayerAirQualityPacket.CODEC,
+                ClientboundPlayerAirQualityPacket::handle
+        );
     }
 }

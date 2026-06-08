@@ -30,5 +30,20 @@
   "item.thinair.respirator": "Respirator",
   "item.thinair.soulfire_bottle": "Bottle of Soulfire",
   "itemGroup.thinair.main": "Thin Air",
-  "subtitles.entity.player.hurt_drown": "Player asphyxiating"
+  "subtitles.entity.player.hurt_drown": "Player asphyxiating",
+  "config.thinair.title": "Thin Air Config",
+  "config.thinair.category.general": "General",
+  "config.thinair.category.ranges": "Air Provider Ranges",
+  "config.thinair.enableSignalTorches": "Signal Torches",
+  "config.thinair.enableSignalTorches.desc": "Allow right-clicking torches to emit particle effects",
+  "config.thinair.drownedChoking": "Drowned Choking",
+  "config.thinair.drownedChoking.desc": "Air removed per Drowned attack (0 to disable)",
+  "config.thinair.yellowAirProviderRadius": "Yellow Air Provider Radius",
+  "config.thinair.yellowAirProviderRadius.desc": "Bubble radius for blocks in the yellow air providers tag",
+  "config.thinair.blueAirProviderRadius": "Blue Air Provider Radius",
+  "config.thinair.blueAirProviderRadius.desc": "Bubble radius for blocks in the blue air providers tag",
+  "config.thinair.redAirProviderRadius": "Red Air Provider Radius",
+  "config.thinair.redAirProviderRadius.desc": "Bubble radius for blocks in the red air providers tag",
+  "config.thinair.greenAirProviderRadius": "Green Air Provider Radius",
+  "config.thinair.greenAirProviderRadius.desc": "Bubble radius for blocks in the green air providers tag"
 }

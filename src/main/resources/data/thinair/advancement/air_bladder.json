@@ -13,7 +13,7 @@
     "using_air_bladder": {
       "conditions": {
         "item": {
-          "tag": "thinair:air_refiller"
+          "items": "#thinair:air_refiller"
         }
       },
       "trigger": "minecraft:using_item"

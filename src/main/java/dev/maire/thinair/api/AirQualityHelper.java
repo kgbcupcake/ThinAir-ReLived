@@ -1,9 +1,11 @@
 package dev.maire.thinair.api;
 
 import dev.maire.thinair.helper.AirQualityHelperImpl;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public interface AirQualityHelper {
     AirQualityHelper INSTANCE = new AirQualityHelperImpl();
@@ -13,6 +15,10 @@ public interface AirQualityHelper {
     }
 
     AirQualityLevel getAirQualityAtLocation(Level level, Vec3 location);
+
+    default AirQualityLevel getAirQualityAtLocation(Level level, Vec3 location, @Nullable BlockPos excludedBlockPos) {
+        return getAirQualityAtLocation(level, location);
+    }
 
     boolean isSensitiveToAirQuality(LivingEntity entity);
 }

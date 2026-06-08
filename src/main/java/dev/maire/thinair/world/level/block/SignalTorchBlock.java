@@ -45,7 +45,7 @@ public class SignalTorchBlock extends TorchBlock {
     }
 
     public static InteractionResult onUseBlock(Player player, Level level, InteractionHand interactionHand, BlockHitResult hitResult) {
-        if (!ThinAirConfig.enableSignalTorches.get() || interactionHand != InteractionHand.MAIN_HAND || player.isDiscrete()) {
+        if (!ThinAirConfig.get().enableSignalTorches() || interactionHand != InteractionHand.MAIN_HAND || player.isDiscrete()) {
             return InteractionResult.PASS;
         }
         BlockPos pos = hitResult.getBlockPos();

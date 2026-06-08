@@ -11,10 +11,10 @@ The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/ver
 ## What's Different
 
 - **NeoForge-only**: Direct port of the 1.20.4 codebase and data, updated for NeoForge 1.21.1 APIs and datapack path changes (`recipe/`, `advancement/`, `loot_table/`, and so on).
-- **Server-authoritative config**: Settings live in `thinair-server.toml` under each world's `serverconfig/` folder; no in-game config screen (same as the original).
-- **Optional Curios**:Respirator uses the Curios head slot when [Curios](https://modrinth.com/mod/curios) is installed; the mod works without it.
+- **Server-authoritative config**: Settings live in `thinair-server.toml` under each world's `serverconfig/` folder, with an optional in-game config screen (Mods menu) via Cloth Config.
+- **Optional Curios**: Respirator uses the Curios head slot when [Curios](https://modrinth.com/mod/curios) is installed; the mod works without it.
 - **No bundled compatibility layers**: Create and other mods are not baked in; compatibility stays optional and separate.
-- **Work in progress**: Reinforced Air Bladder crafting recipe not yet ported; full parity testing is ongoing.
+- **Work in progress**: Full parity testing is ongoing.
 
 ---
 
@@ -24,7 +24,7 @@ The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/ver
 - **Safety Lantern**: Shows nearby air quality by color; can be dyed and scraped with an axe.
 - **Signal Torch**: Right-click to emit particles (configurable).
 - **Respirator**: Protects against choking air (Curios head slot when available).
-- **Air Bladder** / **Reinforced Air Bladder**: Portable air refill.
+- **Air Bladder** / **Reinforced Air Bladder**: Portable air refill; reinforced variant crafted with netherite and copies durability from the ingredient bladder.
 - **Bottle of Soulfire**: Emergency air restore in the Nether.
 - Advancements, recipes, loot injections, drowned air-drain behavior, chunk air-quality sync, and English / Russian / Chinese lang files.
 
@@ -36,7 +36,7 @@ The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/ver
 ### Items
 
 - **Respirator**: protects against choking air (Curios head slot when available)
-- **Air Bladder** / **Reinforced Air Bladder**: portable air refill
+- **Air Bladder** / **Reinforced Air Bladder**: portable air refill (reinforced recipe copies bladder durability)
 - **Bottle of Soulfire**: emergency air restore in the Nether
 
 ### Advancements
@@ -54,21 +54,17 @@ The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/ver
 
 Work still in progress compared to the original 1.20.4 release:
 
-- **Reinforced Air Bladder** crafting recipe not yet ported (requires the custom copy-tag shapeless recipe from upstream)
-- **In-game config UI** not planned file-based config only, matching the original
 - Full parity testing (multiplayer, loot, advancements, worldgen-placed air providers) is ongoing
 
+---
 ## Technical Info
 
-|           |          |
-| --------- | -------- |
-| Loader    | NeoForge |
-| Minecraft | 1.21.1   |
-| Java      | 21       |
-
-Optional: [Curios](https://modrinth.com/mod/curios) 9.5.1+1.21.1 (respirator slot).
-
----
+| Dependency   | Version          | Notes                                                                 |
+| ------------ | ---------------- | --------------------------------------------------------------------- |
+| NeoForge     | 1.21.1           | Required                                                              |
+| Java         | 21               | Required                                                              |
+| [Curios](https://modrinth.com/mod/curios) | 9.5.1+1.21.1 | Optional: respirator head slot, belt lantern, Curios rendering |
+| [Cloth Config](https://modrinth.com/mod/cloth-config) | 15.0.140 | Recommended: in-game config screen from the Mods menu; otherwise edit `serverconfig/thinair-server.toml` |
 
 ## Installation
 
@@ -78,7 +74,7 @@ Optional: [Curios](https://modrinth.com/mod/curios) 9.5.1+1.21.1 (respirator slo
 4. Optionally install [Curios](https://modrinth.com/mod/curios) for respirator slot support.
 5. Launch the game.
 
-After the first launch, edit `<world>/serverconfig/thinair-server.toml` to change air quality, signal torches, drowned choking, and air-provider bubble ranges.
+After the first launch, change settings from the Mods menu config screen or by editing `<world>/serverconfig/thinair-server.toml` (air quality, signal torches, drowned choking, and air-provider bubble ranges).
 
 ---
 
@@ -93,6 +89,7 @@ After the first launch, edit `<world>/serverconfig/thinair-server.toml` to chang
 
 ## References
 
+- [Changelog](CHANGELOG.md)
 - [Original mod on Modrinth](https://modrinth.com/mod/thin-air)
 - [Original source](https://github.com/Fuzss/thinair)
 - [Curios](https://modrinth.com/mod/curios)

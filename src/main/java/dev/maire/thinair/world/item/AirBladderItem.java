@@ -21,37 +21,55 @@ public class AirBladderItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
-        AirQualityLevel airQualityLevel = AirQualityHelper.INSTANCE.getAirQualityAtLocation(player);
         ItemStack itemInHand = player.getItemInHand(interactionHand);
-        if (airQualityLevel.canRefillAir && itemInHand.isDamaged() || !airQualityLevel.canRefillAir && itemInHand.getDamageValue() < itemInHand.getMaxDamage() && player.getAirSupply() < player.getMaxAirSupply()) {
-            return ItemUtils.startUsingInstantly(level, player, interactionHand);
-        } else {
-            return super.use(level, player, interactionHand);
+        if (!canStartUsing(player, itemInHand)) {
+            return InteractionResultHolder.pass(itemInHand);
         }
+        return ItemUtils.startUsingInstantly(level, player, interactionHand);
+    }
+
+    private static boolean canStartUsing(LivingEntity entity, ItemStack itemStack) {
+        AirQualityLevel airQualityLevel = AirQualityHelper.INSTANCE.getAirQualityAtLocation(entity);
+        if (airQualityLevel.canRefillAir) {
+            return itemStack.isDamaged();
+        }
+        return itemStack.getDamageValue() < itemStack.getMaxDamage()
+                && entity.getAirSupply() < entity.getMaxAirSupply();
     }
 
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack itemStack, int remainingUseDuration) {
+        if (level.isClientSide()) {
+            return;
+        }
+
+        ItemStack usingStack = entity.getUseItem();
+        if (usingStack.isEmpty()) {
+            entity.releaseUsingItem();
+            return;
+        }
+
         boolean stopUsing = true;
         AirQualityLevel airQualityLevel = AirQualityHelper.INSTANCE.getAirQualityAtLocation(entity);
         if (airQualityLevel.canRefillAir) {
-            if (itemStack.isDamaged()) {
-                itemStack.setDamageValue(itemStack.getDamageValue() - 4);
+            if (usingStack.isDamaged()) {
+                usingStack.setDamageValue(usingStack.getDamageValue() - 4);
                 stopUsing = false;
             }
-        } else if (itemStack.getDamageValue() < itemStack.getMaxDamage()) {
-            int i = 4;
+        } else if (usingStack.getDamageValue() < usingStack.getMaxDamage()) {
+            int refillTicks = 4;
             EquipmentSlot slot = entity.getUsedItemHand() == InteractionHand.MAIN_HAND
                     ? EquipmentSlot.MAINHAND
                     : EquipmentSlot.OFFHAND;
-            while (i-- > 0 && entity.getAirSupply() < entity.getMaxAirSupply()) {
+            while (refillTicks-- > 0 && entity.getAirSupply() < entity.getMaxAirSupply()) {
                 entity.setAirSupply(entity.getAirSupply() + 1);
-                itemStack.hurtAndBreak(1, entity, slot);
+                usingStack.hurtAndBreak(1, entity, slot);
                 stopUsing = false;
             }
         }
+
         if (!stopUsing) {
-            if (remainingUseDuration <= this.getUseDuration(itemStack, entity) - 7 && remainingUseDuration % 4 == 0) {
+            if (remainingUseDuration <= this.getUseDuration(usingStack, entity) - 7 && remainingUseDuration % 4 == 0) {
                 entity.playSound(this.getDrinkingSound(), 0.5F, entity.level().random.nextFloat() * 0.1F + 0.9F);
             }
         } else {
@@ -61,10 +79,11 @@ public class AirBladderItem extends Item {
 
     @Override
     public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int timeCharged) {
-        if (livingEntity instanceof Player player && player.getAirSupply() >= player.getMaxAirSupply()) {
-            if (!AirQualityHelper.INSTANCE.getAirQualityAtLocation(livingEntity).canRefillAir) {
-                player.getCooldowns().addCooldown(this, 150);
-            }
+        if (!level.isClientSide()
+                && livingEntity instanceof Player player
+                && player.getAirSupply() >= player.getMaxAirSupply()
+                && !AirQualityHelper.INSTANCE.getAirQualityAtLocation(livingEntity).canRefillAir) {
+            player.getCooldowns().addCooldown(this, 150);
         }
         super.releaseUsing(itemStack, level, livingEntity, timeCharged);
     }

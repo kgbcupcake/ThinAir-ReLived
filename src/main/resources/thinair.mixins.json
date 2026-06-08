@@ -6,7 +6,9 @@
   "mixins": [
     "ServerLevelMixin"
   ],
-  "client": [],
+  "client": [
+    "client.ModelPartAccessor"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

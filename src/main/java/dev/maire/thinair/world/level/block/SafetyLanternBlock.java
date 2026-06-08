@@ -10,10 +10,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +21,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,7 +33,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.ticks.TickPriority;
 import org.jetbrains.annotations.Nullable;
 
 public class SafetyLanternBlock extends LanternBlock {
@@ -55,11 +53,14 @@ public class SafetyLanternBlock extends LanternBlock {
     }
 
     private static BlockState setAirQuality(Level level, BlockPos pos, BlockState blockState) {
-        return blockState.setValue(AIR_QUALITY, AirQualityHelper.INSTANCE.getAirQualityAtLocation(level, Vec3.atCenterOf(pos)));
+        return blockState.setValue(
+                AIR_QUALITY,
+                AirQualityHelper.INSTANCE.getAirQualityAtLocation(level, Vec3.atCenterOf(pos), pos)
+        );
     }
 
     public static ItemStack getDisplayItemStack(AirQualityLevel airQualityLevel) {
-        ItemStack itemStack = new ItemStack(ModRegistry.SAFETY_LANTERN_BLOCK.get());
+        ItemStack itemStack = new ItemStack(ModRegistry.SAFETY_LANTERN_ITEM.get());
         CompoundTag tag = new CompoundTag();
         tag.putInt(TAG_AIR_QUALITY_LEVEL, airQualityLevel.ordinal());
         itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
@@ -95,7 +96,35 @@ public class SafetyLanternBlock extends LanternBlock {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
-        level.scheduleTick(pos, this, 20, TickPriority.NORMAL);
+        updateAmbientAirQuality(level, pos);
+    }
+
+    @Override
+    protected void neighborChanged(
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Block block,
+            BlockPos fromPos,
+            boolean isMoving
+    ) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+        updateAmbientAirQuality(level, pos);
+    }
+
+    private static void updateAmbientAirQuality(Level level, BlockPos pos) {
+        if (level.isClientSide) {
+            return;
+        }
+        BlockState current = level.getBlockState(pos);
+        if (!current.hasProperty(AIR_QUALITY) || current.getValue(LOCKED)) {
+            return;
+        }
+        AirQualityLevel ambient = AirQualityHelper.INSTANCE.getAirQualityAtLocation(
+                level, Vec3.atCenterOf(pos), pos);
+        if (current.getValue(AIR_QUALITY) != ambient) {
+            level.setBlockAndUpdate(pos, current.setValue(AIR_QUALITY, ambient));
+        }
     }
 
     @Override
@@ -141,9 +170,8 @@ public class SafetyLanternBlock extends LanternBlock {
             didAnything = true;
         }
 
-        level.setBlockAndUpdate(pos, newBs);
-
         if (didAnything) {
+            level.setBlockAndUpdate(pos, newBs);
             return ItemInteractionResult.sidedSuccess(level.isClientSide());
         } else {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -151,11 +179,8 @@ public class SafetyLanternBlock extends LanternBlock {
     }
 
     @Override
-    protected void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource random) {
-        serverLevel.scheduleTick(blockPos, this, 20, TickPriority.NORMAL);
-        if (!blockState.getValue(LOCKED)) {
-            serverLevel.setBlockAndUpdate(blockPos, setAirQuality(serverLevel, blockPos, blockState));
-        }
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        return getDisplayItemStack(state.getValue(AIR_QUALITY));
     }
 
     @Override

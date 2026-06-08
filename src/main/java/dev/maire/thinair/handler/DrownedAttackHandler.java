@@ -12,7 +12,7 @@ public class DrownedAttackHandler {
         LivingEntity entity = event.getEntity();
         if (event.getSource().getEntity() instanceof Drowned
                 && event.getSource().is(DamageTypes.MOB_ATTACK)) {
-            entity.setAirSupply(entity.getAirSupply() - ThinAirConfig.drownedChoking.get());
+            entity.setAirSupply(entity.getAirSupply() - ThinAirConfig.get().drownedChoking());
         }
     }
 }

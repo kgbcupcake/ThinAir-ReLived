@@ -5,10 +5,12 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import dev.maire.thinair.ThinAir;
 import dev.maire.thinair.ThinAirMod;
+import dev.maire.thinair.api.AirQualityHelper;
 import dev.maire.thinair.api.AirQualityLevel;
 import dev.maire.thinair.capability.AirBubblePositionsCapability;
 import dev.maire.thinair.init.ModCapabilities;
 import dev.maire.thinair.network.ClientboundChunkAirQualityPacket;
+import dev.maire.thinair.world.level.block.SafetyLanternBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -30,18 +33,19 @@ import java.util.Set;
 
 public class AirBubbleTracker {
     private static final Set<ChunkPos> CHUNKS_TO_SCAN = Collections.synchronizedSet(Sets.newHashSet());
+    private static final Set<ChunkPos> DIRTY_CHUNKS = Collections.synchronizedSet(Sets.newHashSet());
     private static final List<Map.Entry<ChunkPos, BlockPos>> CHUNK_SCANNING_PROGRESS =
             Collections.synchronizedList(Lists.newLinkedList());
 
     public static void onBlockStateChange(ServerLevel level, BlockPos pos, BlockState oldBlockState, BlockState newBlockState) {
         ChunkPos chunkPos = new ChunkPos(pos);
         LevelChunk chunk = level.getChunkSource().getChunkNow(chunkPos.x, chunkPos.z);
-        if (chunk != null && !oldBlockState.is(newBlockState.getBlock())) {
+        AirQualityLevel oldAirQuality = AirQualityLevel.getAirQualityFromBlock(oldBlockState);
+        AirQualityLevel newAirQuality = AirQualityLevel.getAirQualityFromBlock(newBlockState);
+        if (chunk != null && (!oldBlockState.is(newBlockState.getBlock()) || oldAirQuality != newAirQuality)) {
             AirBubblePositionsCapability capability = ModCapabilities.get(chunk);
-            if (capability == null) {
-                return;
-            }
-            if (AirQualityLevel.getAirQualityFromBlock(oldBlockState) != null) {
+            if (capability != null) {
+            if (oldAirQuality != null) {
                 AirQualityLevel removed = capability.getAirBubblePositions().remove(pos);
                 if (removed == null) {
                     ThinAir.LOGGER.debug("Didn't remove any air bubbles at {}", pos);
@@ -52,17 +56,18 @@ public class AirBubbleTracker {
                 }
             }
 
-            AirQualityLevel airQualityLevel = AirQualityLevel.getAirQualityFromBlock(newBlockState);
-            if (airQualityLevel != null) {
-                AirQualityLevel clobbered = capability.getAirBubblePositions().put(pos, airQualityLevel);
+            if (newAirQuality != null) {
+                AirQualityLevel clobbered = capability.getAirBubblePositions().put(pos, newAirQuality);
                 if (clobbered != null) {
                     ThinAir.LOGGER.debug("Clobbered air bubble at {}: {}", pos, clobbered);
                 }
                 chunk.setUnsaved(true);
                 ThinAirMod.sendToAllTracking(chunk, new ClientboundChunkAirQualityPacket(
-                        chunk.getPos(), Map.of(pos, airQualityLevel), ClientboundChunkAirQualityPacket.Mode.ADD));
+                        chunk.getPos(), Map.of(pos, newAirQuality), ClientboundChunkAirQualityPacket.Mode.ADD));
+            }
             }
         }
+        DIRTY_CHUNKS.add(new ChunkPos(pos));
     }
 
     public static void onChunkLoad(ServerLevel level, LevelChunk chunk) {
@@ -90,8 +95,9 @@ public class AirBubbleTracker {
     }
 
     public static void onEndLevelTick(MinecraftServer server, ServerLevel level) {
+        try {
         if (!CHUNK_SCANNING_PROGRESS.isEmpty()) {
-            if (false || !level.players().isEmpty() && server.getTickCount() % 200 == 0) {
+            if (!level.players().isEmpty() && server.getTickCount() % 200 == 0) {
                 CHUNK_SCANNING_PROGRESS.sort(Comparator.comparingInt(entry -> {
                     BlockPos worldPosition = entry.getKey().getWorldPosition();
                     return level.players().stream()
@@ -111,7 +117,7 @@ public class AirBubbleTracker {
                     if (capability == null) {
                         return;
                     }
-                    if (true || capability.getSkipCountLeft() <= 0) {
+                    if (capability.getSkipCountLeft() <= 0) {
                         capability.setSkipCountLeft(8);
                         HashMap<BlockPos, AirQualityLevel> airBubblePositions = Maps.newHashMap();
                         BlockPos blockPos = collectAirQualityPositions(chunk, entry.getValue(), airBubblePositions);
@@ -144,6 +150,47 @@ public class AirBubbleTracker {
             }
             iterator.remove();
             CHUNKS_TO_SCAN.remove(chunkPos);
+        }
+        } finally {
+            if (!DIRTY_CHUNKS.isEmpty()) {
+                Set<ChunkPos> dirtyChunks = Sets.newHashSet(DIRTY_CHUNKS);
+                DIRTY_CHUNKS.clear();
+                for (ChunkPos dirtyChunkPos : dirtyChunks) {
+                    updateLanternsInChunk(level, dirtyChunkPos);
+                }
+            }
+        }
+    }
+
+    private static void updateLanternsInChunk(ServerLevel level, ChunkPos chunkPos) {
+        LevelChunk chunk = level.getChunkSource().getChunkNow(chunkPos.x, chunkPos.z);
+        if (chunk == null) {
+            return;
+        }
+        int minX = chunkPos.getMinBlockX();
+        int minZ = chunkPos.getMinBlockZ();
+        int maxX = chunkPos.getMaxBlockX();
+        int maxZ = chunkPos.getMaxBlockZ();
+        int minY = chunk.getMinBuildHeight();
+        int maxY = chunk.getMaxBuildHeight();
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                for (int y = minY; y < maxY; y++) {
+                    BlockPos blockPos = new BlockPos(x, y, z);
+                    BlockState blockState = chunk.getBlockState(blockPos);
+                    if (!(blockState.getBlock() instanceof SafetyLanternBlock)) {
+                        continue;
+                    }
+                    if (blockState.getValue(SafetyLanternBlock.LOCKED)) {
+                        continue;
+                    }
+                    AirQualityLevel ambient = AirQualityHelper.INSTANCE.getAirQualityAtLocation(
+                            level, Vec3.atCenterOf(blockPos), blockPos);
+                    if (blockState.getValue(SafetyLanternBlock.AIR_QUALITY) != ambient) {
+                        level.setBlockAndUpdate(blockPos, blockState.setValue(SafetyLanternBlock.AIR_QUALITY, ambient));
+                    }
+                }
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package dev.maire.thinair.init;
 
 import dev.maire.thinair.ThinAir;
+import dev.maire.thinair.api.AirQualityLevel;
 import dev.maire.thinair.capability.AirBubblePositionsCapability;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.bus.api.IEventBus;
@@ -18,6 +19,10 @@ public class ModCapabilities {
     public static final Supplier<AttachmentType<AirBubblePositionsCapability>> AIR_BUBBLE_POSITIONS =
             ATTACHMENT_TYPES.register("air_bubble_positions", () ->
                     AttachmentType.serializable(AirBubblePositionsCapability::new).build());
+
+    public static final Supplier<AttachmentType<AirQualityLevel>> PLAYER_AIR_QUALITY =
+            ATTACHMENT_TYPES.register("player_air_quality", () ->
+                    AttachmentType.builder(() -> AirQualityLevel.YELLOW).build());
 
     public static void register(IEventBus modEventBus) {
         ATTACHMENT_TYPES.register(modEventBus);

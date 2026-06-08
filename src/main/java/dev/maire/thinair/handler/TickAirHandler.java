@@ -3,6 +3,7 @@ package dev.maire.thinair.handler;
 import dev.maire.thinair.api.AirQualityHelper;
 import dev.maire.thinair.api.AirQualityLevel;
 import dev.maire.thinair.init.ModRegistry;
+import dev.maire.thinair.player.PlayerAirQuality;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
@@ -22,6 +23,7 @@ public class TickAirHandler {
 
         if (entity instanceof ServerPlayer player) {
             ModRegistry.BREATHE_AIR_TRIGGER.get().trigger(player, airQualityLevel);
+            PlayerAirQuality.setIfChanged(player, airQualityLevel);
         }
 
         int airDelta = airQualityLevel.getAirAmountAfterProtection(entity);

@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
@@ -22,10 +23,18 @@ public class AirQualityHelperImpl implements AirQualityHelper {
 
     @Override
     public AirQualityLevel getAirQualityAtLocation(Level level, Vec3 location) {
-        BlockState blockAtEyes = level.getBlockState(BlockPos.containing(location));
-        AirQualityLevel airQualityAtEyes = AirQualityLevel.getAirQualityAtEyes(blockAtEyes);
-        if (airQualityAtEyes != null) {
-            return airQualityAtEyes;
+        return getAirQualityAtLocation(level, location, null);
+    }
+
+    @Override
+    public AirQualityLevel getAirQualityAtLocation(Level level, Vec3 location, @Nullable BlockPos excludedBlockPos) {
+        BlockPos blockPos = BlockPos.containing(location);
+        if (excludedBlockPos == null || !excludedBlockPos.equals(blockPos)) {
+            BlockState blockAtEyes = level.getBlockState(blockPos);
+            AirQualityLevel airQualityAtEyes = AirQualityLevel.getAirQualityAtEyes(blockAtEyes);
+            if (airQualityAtEyes != null) {
+                return airQualityAtEyes;
+            }
         }
 
         // Let's throw the player a bone and say the best air quality wins
@@ -44,11 +53,14 @@ public class AirQualityHelperImpl implements AirQualityHelper {
                     continue;
                 }
                 for (Map.Entry<BlockPos, AirQualityLevel> entry : capability.getAirBubblePositionsView().entrySet()) {
-                    BlockPos blockPos = entry.getKey();
+                    BlockPos bubblePos = entry.getKey();
+                    if (bubblePos.equals(excludedBlockPos)) {
+                        continue;
+                    }
                     AirQualityLevel airQualityLevel = entry.getValue();
                     Objects.requireNonNull(airQualityLevel, "air quality level is null");
                     if (bestAirBubbleQuality == null || airQualityLevel.isBetterThan(bestAirBubbleQuality)) {
-                        double distanceSq = new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5)
+                        double distanceSq = new Vec3(bubblePos.getX() + 0.5, bubblePos.getY() + 0.5, bubblePos.getZ() + 0.5)
                                 .distanceToSqr(location);
                         if (distanceSq < Math.pow(airQualityLevel.getAirProviderRadius(), 2.0)) {
                             if (airQualityLevel == AirQualityLevel.GREEN) {

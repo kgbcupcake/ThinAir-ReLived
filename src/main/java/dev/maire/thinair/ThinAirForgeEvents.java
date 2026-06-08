@@ -5,7 +5,10 @@ import dev.maire.thinair.handler.DrownedAttackHandler;
 import dev.maire.thinair.handler.ReinforcedBladderCraftHandler;
 import dev.maire.thinair.handler.TickAirHandler;
 import dev.maire.thinair.init.ModRegistry;
+import dev.maire.thinair.network.ClientboundPlayerAirQualityPacket;
+import dev.maire.thinair.player.PlayerAirQuality;
 import dev.maire.thinair.world.level.block.SignalTorchBlock;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -71,6 +74,24 @@ public class ThinAirForgeEvents {
     @SubscribeEvent
     public static void onLivingBreathe(LivingBreatheEvent event) {
         TickAirHandler.onLivingBreathe(event);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            PlayerAirQuality.syncToClients(player, PlayerAirQuality.get(player));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onStartTracking(PlayerEvent.StartTracking event) {
+        if (event.getTarget() instanceof ServerPlayer tracked
+                && event.getEntity() instanceof ServerPlayer tracker) {
+            ThinAirMod.sendToPlayer(
+                    tracker,
+                    new ClientboundPlayerAirQualityPacket(tracked.getId(), PlayerAirQuality.get(tracked))
+            );
+        }
     }
 
     @SubscribeEvent

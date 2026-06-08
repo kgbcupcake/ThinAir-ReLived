@@ -1,6 +1,7 @@
 package dev.maire.thinair.integration.curios;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.maire.thinair.client.renderer.curios.SafetyLanternCurioRenderer;
 import dev.maire.thinair.client.renderer.entity.layers.RespiratorRenderer;
 import dev.maire.thinair.init.ModRegistry;
 import net.minecraft.client.model.EntityModel;
@@ -16,6 +17,8 @@ import top.theillusivec4.curios.api.client.ICurioRenderer;
 public class CuriosClientIntegration {
 
     public static void registerCuriosRenderer() {
+        CuriosRendererRegistry.register(ModRegistry.SAFETY_LANTERN_ITEM.get(), SafetyLanternCurioRenderer::new);
+
         CuriosRendererRegistry.register(ModRegistry.RESPIRATOR_ITEM.get(), () -> new ICurioRenderer() {
             @Override
             public <T extends LivingEntity, M extends EntityModel<T>> void render(

@@ -1,9 +1,4 @@
 {
   "replace": false,
-  "values": [
-    "minecraft:campfire",
-    "minecraft:lantern",
-    "minecraft:torch",
-    "minecraft:wall_torch"
-  ]
+  "values": []
 }
