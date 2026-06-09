@@ -153,8 +153,11 @@ public class AirBubbleTracker {
         }
         } finally {
             if (!DIRTY_CHUNKS.isEmpty()) {
-                Set<ChunkPos> dirtyChunks = Sets.newHashSet(DIRTY_CHUNKS);
-                DIRTY_CHUNKS.clear();
+                Set<ChunkPos> dirtyChunks;
+                synchronized (DIRTY_CHUNKS) {
+                    dirtyChunks = Sets.newHashSet(DIRTY_CHUNKS);
+                    DIRTY_CHUNKS.clear();
+                }
                 for (ChunkPos dirtyChunkPos : dirtyChunks) {
                     updateLanternsInChunk(level, dirtyChunkPos);
                 }

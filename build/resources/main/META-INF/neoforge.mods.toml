@@ -8,6 +8,7 @@ version = "1.0.0"
 displayName = "Thin Air"
 description = '''A clean NeoForge 1.21.1 port of Thin Air by fuzs Ported by Marie.'''
 authors = "Marie"
+displayURL = "https://modrinth.com/mod/thin_air_1.21.1_port"
 logoFile = "mod_logo.png"
 logoBlur = false
 
