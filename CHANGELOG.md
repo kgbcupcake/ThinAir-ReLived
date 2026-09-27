@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2026-09-27
+
+### Added
+
+- Per-biome air-quality profiles with height thresholds; biome profiles override dimension profiles.
+- Optional `affectAllMobs` setting to apply air-quality effects to all non-player living entities.
+- Optional Sable compatibility for air-provider blocks on moving sub-levels.
+- Optional Create: Deep Seas compatibility: sealed compartments with an active oxygen supply are breathable, while compartments without one use the new orange depleted-air quality.
+- Orange air support, including its Safety Lantern appearance, HUD label, and configurable provider radius.
+
+### Changed
+
+- Added Sable, Sable Companion, and Create: Deep Seas as optional compatibility dependencies.
+
+### Known limitations
+
+- Sable and Create: Deep Seas runtime behavior has not yet been verified in a gameplay session.
+
 ## [1.0.4] - 2026-07-11
 
 ### Added
