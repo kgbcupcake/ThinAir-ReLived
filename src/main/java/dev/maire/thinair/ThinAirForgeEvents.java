@@ -5,6 +5,7 @@ import dev.maire.thinair.handler.DrownedAttackHandler;
 import dev.maire.thinair.handler.ReinforcedBladderCraftHandler;
 import dev.maire.thinair.handler.TickAirHandler;
 import dev.maire.thinair.init.ModRegistry;
+import dev.maire.thinair.integration.sable.SableAirIntegration;
 import dev.maire.thinair.network.ClientboundPlayerAirQualityPacket;
 import dev.maire.thinair.player.PlayerAirQuality;
 import dev.maire.thinair.world.level.block.SignalTorchBlock;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -62,6 +64,9 @@ public class ThinAirForgeEvents {
     public static void onLevelUnload(LevelEvent.Unload event) {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
             AirBubbleTracker.onLevelUnload(serverLevel.getServer(), serverLevel);
+            if (ModList.get().isLoaded("sable") && ModList.get().isLoaded("sablecompanion")) {
+                SableAirIntegration.clearCaches();
+            }
         }
     }
 

@@ -6,6 +6,8 @@ import dev.maire.thinair.capability.AirBubblePositionsCapability;
 import dev.maire.thinair.config.ThinAirConfig;
 import dev.maire.thinair.init.ModCapabilities;
 import dev.maire.thinair.init.ModRegistry;
+import dev.maire.thinair.integration.sable.SableAirIntegration;
+import net.neoforged.fml.ModList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,6 +30,20 @@ public class AirQualityHelperImpl implements AirQualityHelper {
 
     @Override
     public AirQualityLevel getAirQualityAtLocation(Level level, Vec3 location, @Nullable BlockPos excludedBlockPos) {
+        if (!level.isClientSide
+                && ModList.get().isLoaded("sable")
+                && ModList.get().isLoaded("sablecompanion")) {
+            AirQualityLevel sableAirQuality = SableAirIntegration.getAirQualityAtLocation(
+                    level,
+                    location,
+                    excludedBlockPos,
+                    ModList.get().isLoaded("create_submarine")
+            );
+            if (sableAirQuality != null) {
+                return sableAirQuality;
+            }
+        }
+
         BlockPos blockPos = BlockPos.containing(location);
         if (excludedBlockPos == null || !excludedBlockPos.equals(blockPos)) {
             BlockState blockAtEyes = level.getBlockState(blockPos);

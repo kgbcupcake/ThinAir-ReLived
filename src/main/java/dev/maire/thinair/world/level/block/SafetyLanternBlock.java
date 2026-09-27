@@ -143,6 +143,8 @@ public class SafetyLanternBlock extends LanternBlock {
             lockedAirQuality = AirQualityLevel.BLUE;
         } else if (itemUsed.is(Items.YELLOW_DYE) && presentLockedAirQuality != AirQualityLevel.YELLOW) {
             lockedAirQuality = AirQualityLevel.YELLOW;
+        } else if (itemUsed.is(Items.ORANGE_DYE) && presentLockedAirQuality != AirQualityLevel.ORANGE) {
+            lockedAirQuality = AirQualityLevel.ORANGE;
         } else if (itemUsed.is(Items.RED_DYE) && presentLockedAirQuality != AirQualityLevel.RED) {
             lockedAirQuality = AirQualityLevel.RED;
         } else if (itemUsed.getItem() instanceof AxeItem && blockState.getValue(LOCKED)) {

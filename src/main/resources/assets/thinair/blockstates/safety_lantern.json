@@ -12,6 +12,12 @@
     "air_quality=green,hanging=true": {
       "model": "thinair:block/safety_lantern_green_hanging"
     },
+    "air_quality=orange,hanging=false": {
+      "model": "thinair:block/safety_lantern_orange"
+    },
+    "air_quality=orange,hanging=true": {
+      "model": "thinair:block/safety_lantern_orange_hanging"
+    },
     "air_quality=red,hanging=false": {
       "model": "thinair:block/safety_lantern_red"
     },

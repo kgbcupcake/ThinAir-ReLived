@@ -67,7 +67,16 @@ public enum AirQualityLevel implements StringRepresentable {
     /**
      * Completely unable to breathe (like underwater).
      */
-    RED(false, false, "heavy_breathing_equipment");
+    RED(false, false, "heavy_breathing_equipment"),
+    /**
+     * Sealed air with no active oxygen supply; breathing equipment slows the loss.
+     */
+    ORANGE(false, false, "breathing_equipment") {
+        @Override
+        int getAirAmount(LivingEntity entity) {
+            return entity.level().getGameTime() % 4 == 0 ? super.getAirAmount(entity) : 0;
+        }
+    };
 
     public static final StringRepresentable.EnumCodec<AirQualityLevel> CODEC = StringRepresentable.fromEnum(
             AirQualityLevel::values);
@@ -111,11 +120,17 @@ public enum AirQualityLevel implements StringRepresentable {
             case GREEN -> ThinAirConfig.get().greenAirProviderRadius();
             case YELLOW -> ThinAirConfig.get().yellowAirProviderRadius();
             case BLUE -> ThinAirConfig.get().blueAirProviderRadius();
+            case ORANGE -> ThinAirConfig.get().orangeAirProviderRadius();
         };
     }
 
     public int getLightLevel() {
-        return 15 - this.ordinal() * 3;
+        return switch (this) {
+            case GREEN -> 15;
+            case BLUE -> 12;
+            case YELLOW, ORANGE -> 9;
+            case RED -> 6;
+        };
     }
 
     public int getOutputSignal() {
@@ -123,7 +138,16 @@ public enum AirQualityLevel implements StringRepresentable {
     }
 
     public boolean isBetterThan(AirQualityLevel other) {
-        return this.ordinal() < other.ordinal();
+        return qualityRank(this) < qualityRank(other);
+    }
+
+    private static int qualityRank(AirQualityLevel airQualityLevel) {
+        return switch (airQualityLevel) {
+            case GREEN -> 0;
+            case BLUE -> 1;
+            case YELLOW, ORANGE -> 2;
+            case RED -> 3;
+        };
     }
 
     public int getAirAmountAfterProtection(LivingEntity entity) {

@@ -53,6 +53,15 @@ public final class ThinAirConfigScreen {
                 .build());
 
         ranges.addEntry(eb.startDoubleField(
+                        Component.translatable("config.thinair.orangeAirProviderRadius"),
+                        config.orangeAirProviderRadius())
+                .setDefaultValue(6.0)
+                .setMin(1.0).setMax(32.0)
+                .setTooltip(Component.translatable("config.thinair.orangeAirProviderRadius.desc"))
+                .setSaveConsumer(config::setOrangeAirProviderRadius)
+                .build());
+
+        ranges.addEntry(eb.startDoubleField(
                         Component.translatable("config.thinair.blueAirProviderRadius"),
                         config.blueAirProviderRadius())
                 .setDefaultValue(6.0)

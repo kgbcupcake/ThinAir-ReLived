@@ -68,7 +68,7 @@ public class ThinAirClient {
         }
 
         AirQualityLevel level = ClientPlayerAirQualityCache.get(player.getId());
-        if (level != AirQualityLevel.YELLOW && level != AirQualityLevel.RED) {
+        if (level != AirQualityLevel.YELLOW && level != AirQualityLevel.ORANGE && level != AirQualityLevel.RED) {
             return;
         }
 
@@ -138,10 +138,16 @@ public class ThinAirClient {
         int circleY = y + (quality0RowHeight - circleSize) / 2;
         drawCircleApprox(guiGraphics, contentX, circleY, circleSize, fadedLevelColor);
 
-        String label = level == AirQualityLevel.RED ? "Red Air" : "Yellow Air";
+        String labelKey = switch (level) {
+            case RED -> "hud.thinair.red_air";
+            case ORANGE -> "hud.thinair.orange_air";
+            case YELLOW -> "hud.thinair.yellow_air";
+            default -> "hud.thinair.red_air";
+        };
         int textX = contentX + circleSize + 3;
         int textY = y + (quality0RowHeight - font.lineHeight) / 2;
-        guiGraphics.drawString(font, label, textX, textY, fadedLevelColor, false);
+        guiGraphics.drawString(font, net.minecraft.network.chat.Component.translatable(labelKey),
+                textX, textY, fadedLevelColor, false);
 
         y += quality0RowHeight + spacing;
 
@@ -179,6 +185,7 @@ public class ThinAirClient {
             case YELLOW -> 0xFFFFD700;
             case RED -> 0xFFFF4444;
             case BLUE -> 0xFF5555FF;
+            case ORANGE -> 0xFFFFA500;
         };
     }
 

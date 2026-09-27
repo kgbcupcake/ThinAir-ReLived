@@ -23,6 +23,12 @@
       "predicate": {
         "thinair:air_quality_level": 0.3
       }
+    },
+    {
+      "model": "thinair:item/safety_lantern_orange",
+      "predicate": {
+        "thinair:air_quality_level": 0.4
+      }
     }
   ]
 }

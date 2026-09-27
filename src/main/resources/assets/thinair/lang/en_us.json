@@ -41,10 +41,15 @@
   "config.thinair.drownedChoking.desc": "Air removed per Drowned attack (0 to disable)",
   "config.thinair.yellowAirProviderRadius": "Yellow Air Provider Radius",
   "config.thinair.yellowAirProviderRadius.desc": "Bubble radius for blocks in the yellow air providers tag",
+  "config.thinair.orangeAirProviderRadius": "Orange Air Provider Radius",
+  "config.thinair.orangeAirProviderRadius.desc": "Bubble radius for blocks in the orange air providers tag",
   "config.thinair.blueAirProviderRadius": "Blue Air Provider Radius",
   "config.thinair.blueAirProviderRadius.desc": "Bubble radius for blocks in the blue air providers tag",
   "config.thinair.redAirProviderRadius": "Red Air Provider Radius",
   "config.thinair.redAirProviderRadius.desc": "Bubble radius for blocks in the red air providers tag",
   "config.thinair.greenAirProviderRadius": "Green Air Provider Radius",
-  "config.thinair.greenAirProviderRadius.desc": "Bubble radius for blocks in the green air providers tag"
+  "config.thinair.greenAirProviderRadius.desc": "Bubble radius for blocks in the green air providers tag",
+  "hud.thinair.yellow_air": "Yellow Air",
+  "hud.thinair.orange_air": "Orange Air",
+  "hud.thinair.red_air": "Red Air"
 }

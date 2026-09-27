@@ -7,7 +7,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public class ThinAirNetwork {
 
     public static void register(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(ThinAir.MOD_ID).versioned("1");
+        PayloadRegistrar registrar = event.registrar(ThinAir.MOD_ID).versioned("2");
 
         registrar.playToClient(
                 ClientboundChunkAirQualityPacket.TYPE,

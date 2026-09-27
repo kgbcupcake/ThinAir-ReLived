@@ -82,6 +82,25 @@ repositories {
         name = 'Registrate'
         url = 'https://maven.ithundxr.dev/snapshots'
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'RyanHCode'
+                url = 'https://maven.ryanhcode.dev/releases'
+            }
+        }
+        filter {
+            includeGroup 'dev.ryanhcode.sable'
+            includeGroup 'dev.ryanhcode.sable-companion'
+        }
+    }
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
 }
 
 dependencies {
@@ -89,6 +108,9 @@ dependencies {
     localRuntime "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     implementation "me.shedaniel.cloth:cloth-config-neoforge:15.0.140"
     compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
+    compileOnly "dev.ryanhcode.sable:sable-common-${minecraft_version}:${sable_version}"
+    compileOnly "dev.ryanhcode.sable-companion:sable-companion-common-${minecraft_version}:${sable_companion_version}"
+    compileOnly "maven.modrinth:create-deep-seas:${deep_seas_version}"
 }
 tasks.named('processResources', ProcessResources).configure {
     from('Assets') {

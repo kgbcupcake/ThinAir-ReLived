@@ -33,5 +33,8 @@
     "item.minecraft.lingering_potion.effect.water_breathing": "滞留型自由呼吸药剂",
     "death.attack.drown": "%1$s 使窒息",
     "death.attack.drown.player": "%1$s 试图逃跑时窒息 %2$s",
-    "subtitles.entity.player.hurt_drown": "玩家窒息"
+    "subtitles.entity.player.hurt_drown": "玩家窒息",
+    "hud.thinair.yellow_air": "黄色空气",
+    "hud.thinair.orange_air": "橙色空气",
+    "hud.thinair.red_air": "红色空气"
 }

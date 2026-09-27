@@ -27,6 +27,7 @@ public class ThinAirConfig {
     private ModConfigSpec.DoubleValue blueAirProviderRadius;
     private ModConfigSpec.DoubleValue redAirProviderRadius;
     private ModConfigSpec.DoubleValue yellowAirProviderRadius;
+    private ModConfigSpec.DoubleValue orangeAirProviderRadius;
     private ModConfigSpec.DoubleValue greenAirProviderRadius;
 
     static {
@@ -63,6 +64,9 @@ public class ThinAirConfig {
         yellowAirProviderRadius = builder.comment(
                         "The radius in which all blocks defined in the yellow air providers tag project a bubble of air around them.")
                 .defineInRange("yellowAirProviderRadius", 6.0, 1.0, 32.0);
+        orangeAirProviderRadius = builder.comment(
+                        "The radius in which all blocks defined in the orange air providers tag project a bubble of air around them.")
+                .defineInRange("orangeAirProviderRadius", 6.0, 1.0, 32.0);
         blueAirProviderRadius = builder.comment(
                         "The radius in which all blocks defined in the blue air providers tag (usually soul fire related blocks) project a bubble of air around them.")
                 .defineInRange("blueAirProviderRadius", 6.0, 1.0, 32.0);
@@ -116,6 +120,14 @@ public class ThinAirConfig {
 
     public void setYellowAirProviderRadius(double value) {
         yellowAirProviderRadius.set(value);
+    }
+
+    public double orangeAirProviderRadius() {
+        return orangeAirProviderRadius.get();
+    }
+
+    public void setOrangeAirProviderRadius(double value) {
+        orangeAirProviderRadius.set(value);
     }
 
     public double blueAirProviderRadius() {

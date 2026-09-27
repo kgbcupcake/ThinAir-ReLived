@@ -30,5 +30,8 @@
   "item.thinair.respirator": "Респиратор",
   "item.thinair.soulfire_bottle": "Бутылочка огня душ",
   "itemGroup.thinair.main": "Разрежённый воздух",
-  "subtitles.entity.player.hurt_drown": "Игрок задыхается"
+  "subtitles.entity.player.hurt_drown": "Игрок задыхается",
+  "hud.thinair.yellow_air": "Жёлтый воздух",
+  "hud.thinair.orange_air": "Оранжевый воздух",
+  "hud.thinair.red_air": "Красный воздух"
 }

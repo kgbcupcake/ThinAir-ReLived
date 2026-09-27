@@ -14,13 +14,14 @@ The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/ver
 - **Server-authoritative config**: Settings live in `thinair-server.toml` under each world's `serverconfig/` folder, with an optional in-game config screen (Mods menu) via Cloth Config.
 - **Optional Curios**: Respirator uses the Curios head slot and Safety Lantern uses the Curios belt slot when [Curios](https://modrinth.com/mod/curios) is installed; the mod works without it.
 - **Optional Create integration**: Backtanks provide breathable air in yellow and red air when worn with a Diving Helmet (via [Create](https://modrinth.com/mod/create)'s own equipment system, with an optional Curios back slot for the backtank itself); like Curios, none of this is required or bundled — the mod loads and works fine with neither installed.
+- **Optional Sable integration**: Air-provider blocks work on moving Sable sub-levels when [Sable Companion](https://modrinth.com/mod/sable-companion) is installed. With [Create: Deep Seas](https://modrinth.com/mod/create-deep-seas), sealed compartments are green while a powered oxygen diffuser has oxygen and turn orange when the compartment has no active oxygen supply. This also covers Sable vessels in [Create: Cosmonautics](https://modrinth.com/mod/create-cosmonatics) when they use Deep Seas life-support blocks.
 - **Work in progress**: Full parity testing is ongoing.
 
 ---
 
 ## Features
 
-- **Air quality levels**: Green, yellow, red, and blue air affect breathing and what equipment helps, by dimension and height.
+- **Air quality levels**: Green, yellow, orange, red, and blue air affect breathing and what equipment helps, by dimension and height.
 - **Safety Lantern**: Shows nearby air quality by color; can be dyed and scraped with an axe.
 - **Signal Torch**: Right-click to emit particles (configurable).
 - **Respirator**: Protects against choking air (Curios head slot when available).
@@ -55,6 +56,7 @@ The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/ver
 Work still in progress compared to the original 1.20.4 release:
 
 - Full parity testing (multiplayer, loot, advancements, worldgen-placed air providers) is ongoing
+- Sable oxygen status currently follows Create: Deep Seas sealed-compartment state and powered oxygen-diffuser tank contents; other add-ons' filtration systems and warning thresholds are not inferred.
 
 ---
 ## Technical Info
@@ -65,6 +67,9 @@ Work still in progress compared to the original 1.20.4 release:
 | Java         | 21               | Required                                                              |
 | [Curios](https://modrinth.com/mod/curios) | 9.5.1+1.21.1 | Optional: respirator head slot, belt lantern, Curios rendering |
 | [Create](https://modrinth.com/mod/create) | 6.0.10-280 | Optional: backtank breathable air via Diving Helmet |
+| [Sable](https://modrinth.com/mod/sable) | 2.0.5+ | Optional: moving-sub-level air providers |
+| [Sable Companion](https://modrinth.com/mod/sable-companion) | 1.6.0+ | Optional: Sable API used for moving-sub-level integration |
+| [Create: Deep Seas](https://modrinth.com/mod/create-deep-seas) | 2.2.4+ | Optional: sealed compartment oxygen status, requires Sable |
 | [Cloth Config](https://modrinth.com/mod/cloth-config) | 15.0.140 | Recommended: in-game config screen from the Mods menu; otherwise edit `serverconfig/thinair-server.toml` |
 
 ## Installation
