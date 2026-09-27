@@ -37,6 +37,8 @@
   "config.thinair.category.ranges": "Air Provider Ranges",
   "config.thinair.enableSignalTorches": "Signal Torches",
   "config.thinair.enableSignalTorches.desc": "Allow right-clicking torches to emit particle effects",
+  "config.thinair.affectAllMobs": "Affect All Mobs",
+  "config.thinair.affectAllMobs.desc": "Apply air quality effects to all non-player living entities, in addition to entities in the air quality sensitive tag",
   "config.thinair.drownedChoking": "Drowned Choking",
   "config.thinair.drownedChoking.desc": "Air removed per Drowned attack (0 to disable)",
   "config.thinair.yellowAirProviderRadius": "Yellow Air Provider Radius",

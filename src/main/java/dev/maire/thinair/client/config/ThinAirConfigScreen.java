@@ -32,6 +32,14 @@ public final class ThinAirConfigScreen {
                 .setSaveConsumer(config::setEnableSignalTorches)
                 .build());
 
+        general.addEntry(eb.startBooleanToggle(
+                        Component.translatable("config.thinair.affectAllMobs"),
+                        config.affectAllMobs())
+                .setDefaultValue(false)
+                .setTooltip(Component.translatable("config.thinair.affectAllMobs.desc"))
+                .setSaveConsumer(config::setAffectAllMobs)
+                .build());
+
         general.addEntry(eb.startIntSlider(
                         Component.translatable("config.thinair.drownedChoking"),
                         config.drownedChoking(), 0, 72000)

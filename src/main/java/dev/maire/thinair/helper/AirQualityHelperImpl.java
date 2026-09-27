@@ -9,6 +9,7 @@ import dev.maire.thinair.init.ModRegistry;
 import dev.maire.thinair.integration.sable.SableAirIntegration;
 import net.neoforged.fml.ModList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
@@ -93,14 +94,23 @@ public class AirQualityHelperImpl implements AirQualityHelper {
         if (bestAirBubbleQuality != null) {
             return bestAirBubbleQuality;
         } else {
+            int y = (int) Math.round(location.y);
+            var biome = level.getBiome(blockPos).unwrapKey().map(ResourceKey::location).orElse(null);
+            if (biome != null) {
+                AirQualityLevel biomeQuality = ThinAirConfig.getAirQualityAtLevelByBiome(biome, y);
+                if (biomeQuality != null) {
+                    return biomeQuality;
+                }
+            }
             return ThinAirConfig.getAirQualityAtLevelByDimension(
-                    level.dimension().location(), (int) Math.round(location.y));
+                    level.dimension().location(), y);
         }
     }
 
     @Override
     public boolean isSensitiveToAirQuality(LivingEntity entity) {
-        return entity.getType().is(ModRegistry.AIR_QUALITY_SENSITIVE_ENTITY_TYPE_TAG)
+        return (entity.getType().is(ModRegistry.AIR_QUALITY_SENSITIVE_ENTITY_TYPE_TAG)
+                || ThinAirConfig.get().affectAllMobs() && !(entity instanceof Player))
                 && (!(entity instanceof Player player) || !player.getAbilities().invulnerable);
     }
 }

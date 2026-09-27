@@ -21,7 +21,7 @@ The original mod is [archived on Modrinth](https://modrinth.com/mod/thin-air/ver
 
 ## Features
 
-- **Air quality levels**: Green, yellow, orange, red, and blue air affect breathing and what equipment helps, by dimension and height.
+- **Air quality levels**: Green, yellow, orange, red, and blue air affect breathing and what equipment helps, by dimension, biome, and height.
 - **Safety Lantern**: Shows nearby air quality by color; can be dyed and scraped with an axe.
 - **Signal Torch**: Right-click to emit particles (configurable).
 - **Respirator**: Protects against choking air (Curios head slot when available).
@@ -80,7 +80,9 @@ Work still in progress compared to the original 1.20.4 release:
 4. Optionally install [Curios](https://modrinth.com/mod/curios) for respirator/lantern slot support, and/or [Create](https://modrinth.com/mod/create) for backtank breathable-air support.
 5. Launch the game.
 
-After the first launch, change settings from the Mods menu config screen or by editing `<world>/serverconfig/thinair-server.toml` (air quality, signal torches, drowned choking, and air-provider bubble ranges).
+After the first launch, change settings from the Mods menu config screen or by editing `<world>/serverconfig/thinair-server.toml` (air quality, signal torches, mob sensitivity, drowned choking, and air-provider bubble ranges).
+
+The `dimensions` setting configures ambient air by dimension, and the `biomes` setting can override it for individual biomes. Both use entries of the form `resource_location=default_quality,height:quality,height:quality`, with height thresholds in ascending order; each quality applies at that height and above until the next threshold. For example, `minecraft:the_nether=yellow` and `minecraft:lush_caves=green,-64:yellow,0:red`. A biome override takes precedence over the dimension profile; explicit air blocks and nearby air-provider bubbles take precedence over both. By default, air effects apply to entity types in the `thinair:air_quality_sensitive` entity tag. Enable `affectAllMobs` to include all non-player living entities as well.
 
 ---
 
