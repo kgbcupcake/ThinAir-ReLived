@@ -154,6 +154,43 @@ public enum AirQualityLevel implements StringRepresentable {
         return this.isProtected(entity) ? 0 : this.getAirAmount(entity);
     }
 
+    public int getRefillAirAmountFromBreathingEquipment(LivingEntity entity, int refillAirAmount) {
+        if (this.breathingEquipment == null
+                || MobEffectUtil.hasWaterBreathing(entity)
+                || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_REFILLER_ITEM_TAG)) {
+            return 0;
+        }
+
+        ItemStack itemStack = this.findEquippedBreathingEquipment(entity);
+        if (itemStack.isEmpty()) {
+            return 0;
+        }
+
+        if (refillAirAmount <= 0 && this == RED) {
+            refillAirAmount = 4;
+        }
+        if (refillAirAmount <= 0) {
+            return 0;
+        }
+
+        int maxAirSupply = entity.getMaxAirSupply();
+        if (maxAirSupply > 0) {
+            int currentAirSupply = entity.getAirSupply();
+            int nextAirSupply = (int) Math.min(maxAirSupply, (long) currentAirSupply + refillAirAmount);
+            int bubblesRestored = getAirBubbleCount(nextAirSupply, maxAirSupply)
+                    - getAirBubbleCount(currentAirSupply, maxAirSupply);
+            if (bubblesRestored > 0) {
+                itemStack.hurtAndBreak(bubblesRestored, entity, EquipmentSlot.HEAD);
+            }
+        }
+
+        return refillAirAmount;
+    }
+
+    private static int getAirBubbleCount(int airSupply, int maxAirSupply) {
+        return (int) Math.ceil(Math.max(0, airSupply) * 10.0 / maxAirSupply);
+    }
+
     boolean isProtected(LivingEntity entity) {
         return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem()
                 .is(ModRegistry.AIR_REFILLER_ITEM_TAG) || this.isProtectedViaBreathingEquipment(entity);
@@ -192,9 +229,6 @@ public enum AirQualityLevel implements StringRepresentable {
     private boolean isProtectedViaBreathingEquipment(LivingEntity entity) {
         if (this.breathingEquipment != null) {
             ItemStack itemStack = this.findEquippedBreathingEquipment(entity);
-            if (!itemStack.isEmpty() && entity.level().getGameTime() % (20 * 15) == 0) {
-                itemStack.hurtAndBreak(1, entity, EquipmentSlot.HEAD);
-            }
             if (!itemStack.isEmpty()) {
                 return true;
             }
