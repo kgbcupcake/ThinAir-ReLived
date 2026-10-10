@@ -149,7 +149,7 @@ public class ThinAirConfig {
 
     public void setOrangeAirStartY(int value) {
         orangeAirStartY.set(value);
-        clearDimensionCache(); // Recalculate air quality when this changes
+        // No need to clear cache since we handle overworld separately
     }
 
     public double yellowAirProviderRadius() {
