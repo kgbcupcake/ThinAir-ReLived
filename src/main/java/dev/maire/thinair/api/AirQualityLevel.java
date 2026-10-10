@@ -190,6 +190,10 @@ public enum AirQualityLevel implements StringRepresentable {
     }
 
     private boolean isProtectedViaBreathingEquipment(LivingEntity entity) {
+        // Breathing equipment (respirators) should not work in RED air (underwater, etc.)
+        if (this == RED) {
+            return false;
+        }
         if (this.breathingEquipment != null) {
             ItemStack itemStack = this.findEquippedBreathingEquipment(entity);
             if (!itemStack.isEmpty() && entity.level().getGameTime() % (20 * 15) == 0) {
