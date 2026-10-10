@@ -48,6 +48,14 @@ public final class ThinAirConfigScreen {
                 .setSaveConsumer(config::setDrownedChoking)
                 .build());
 
+        general.addEntry(eb.startIntSlider(
+                        Component.translatable("config.thinair.orangeAirStartY"),
+                        config.orangeAirStartY(), -64, 320)
+                .setDefaultValue(0)
+                .setTooltip(Component.translatable("config.thinair.orangeAirStartY.desc"))
+                .setSaveConsumer(config::setOrangeAirStartY)
+                .build());
+
         ConfigCategory ranges = builder.getOrCreateCategory(
                 Component.translatable("config.thinair.category.ranges"));
 

@@ -24,6 +24,7 @@ public class ThinAirConfig {
 
     private ModConfigSpec.ConfigValue<List<? extends String>> dimensions;
     private ModConfigSpec.ConfigValue<List<? extends String>> biomes;
+    private ModConfigSpec.IntValue orangeAirStartY;
     private ModConfigSpec.BooleanValue enableSignalTorches;
     private ModConfigSpec.BooleanValue affectAllMobs;
     private ModConfigSpec.IntValue drownedChoking;
@@ -41,15 +42,21 @@ public class ThinAirConfig {
     public ThinAirConfig(ModConfigSpec.Builder builder) {
         INSTANCE = this;
 
+        orangeAirStartY = builder.comment(
+                        "The Y-level where orange air begins in the Overworld (requires respirator below this level).",
+                        "Set to -64 for deep caves only, 0 for below sea level, or higher values for more challenge.")
+                .defineInRange("orangeAirStartY", 0, -64, 320);
+
         dimensions = builder.comment("Air qualities at different heights in different dimensions.",
                         "The syntax is the dimension's resource location, the \"default\" air level in that dimension,",
                         "then any number of height:airlevel pairs separated by commas.",
                         "The air will have that quality starting at that height and above (until the next entry).",
                         "The entries must be in ascending order of height.",
-                        "If a dimension doesn't have an entry here, it'll be assumed to be green everywhere."
+                        "If a dimension doesn't have an entry here, it'll be assumed to be green everywhere.",
+                        "NOTE: The orangeAirStartY setting above overrides the Overworld config."
                 )
                 .defineList("dimensions",
-                        Arrays.asList("minecraft:overworld=yellow,0:green,128:yellow",
+                        Arrays.asList("minecraft:overworld=orange,0:green,128:yellow",
                                 "minecraft:the_nether=yellow",
                                 "minecraft:the_end=red"
                         ),
@@ -134,6 +141,15 @@ public class ThinAirConfig {
 
     public void setDrownedChoking(int value) {
         drownedChoking.set(value);
+    }
+
+    public int orangeAirStartY() {
+        return orangeAirStartY.get();
+    }
+
+    public void setOrangeAirStartY(int value) {
+        orangeAirStartY.set(value);
+        clearDimensionCache(); // Recalculate air quality when this changes
     }
 
     public double yellowAirProviderRadius() {
@@ -255,6 +271,16 @@ public class ThinAirConfig {
     }
 
     public static AirQualityLevel getAirQualityAtLevelByDimension(ResourceLocation dimension, int y) {
+        // Special handling for Overworld using the simple orangeAirStartY config
+        if (dimension.equals(ResourceLocation.withDefaultNamespace("overworld"))) {
+            int orangeStartY = INSTANCE.orangeAirStartY.get();
+            if (y < orangeStartY) {
+                return AirQualityLevel.ORANGE;
+            } else {
+                return AirQualityLevel.GREEN;
+            }
+        }
+
         if (dimensionEntries == null) {
             var lines = INSTANCE.dimensions.get();
             dimensionEntries = new HashMap<>(lines.size());
