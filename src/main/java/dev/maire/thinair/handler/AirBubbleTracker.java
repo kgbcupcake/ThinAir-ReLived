@@ -38,6 +38,7 @@ public class AirBubbleTracker {
             Collections.synchronizedList(Lists.newLinkedList());
 
     public static void onBlockStateChange(ServerLevel level, BlockPos pos, BlockState oldBlockState, BlockState newBlockState) {
+        if (!level.getServer().isSameThread()) return;
         ChunkPos chunkPos = new ChunkPos(pos);
         LevelChunk chunk = level.getChunkSource().getChunkNow(chunkPos.x, chunkPos.z);
         AirQualityLevel oldAirQuality = AirQualityLevel.getAirQualityFromBlock(oldBlockState);
