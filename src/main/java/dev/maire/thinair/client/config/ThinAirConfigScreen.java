@@ -50,7 +50,7 @@ public final class ThinAirConfigScreen {
 
         general.addEntry(eb.startIntSlider(
                         Component.translatable("config.thinair.orangeAirStartY"),
-                        config.orangeAirStartY(), -64, 320)
+                        config.orangeAirStartY(), -128, 320)
                 .setDefaultValue(0)
                 .setTooltip(Component.translatable("config.thinair.orangeAirStartY.desc"))
                 .setSaveConsumer(config::setOrangeAirStartY)

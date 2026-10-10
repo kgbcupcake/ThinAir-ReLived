@@ -44,8 +44,8 @@ public class ThinAirConfig {
 
         orangeAirStartY = builder.comment(
                         "The Y-level where orange air begins in the Overworld (requires respirator below this level).",
-                        "Set to -64 for deep caves only, 0 for below sea level, or higher values for more challenge.")
-                .defineInRange("orangeAirStartY", 0, -64, 320);
+                        "Set to -128 to disable orange air, 0 for below sea level, or higher values for more challenge.")
+                .defineInRange("orangeAirStartY", 0, -128, 320);
 
         dimensions = builder.comment("Air qualities at different heights in different dimensions.",
                         "The syntax is the dimension's resource location, the \"default\" air level in that dimension,",
