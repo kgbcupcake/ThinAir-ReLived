@@ -156,6 +156,7 @@ public enum AirQualityLevel implements StringRepresentable {
 
     public int getRefillAirAmountFromBreathingEquipment(LivingEntity entity, int refillAirAmount) {
         if (this.breathingEquipment == null
+                || this == RED
                 || MobEffectUtil.hasWaterBreathing(entity)
                 || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_REFILLER_ITEM_TAG)) {
             return 0;
@@ -192,8 +193,9 @@ public enum AirQualityLevel implements StringRepresentable {
     }
 
     boolean isProtected(LivingEntity entity) {
-        return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem()
-                .is(ModRegistry.AIR_REFILLER_ITEM_TAG) || this.isProtectedViaBreathingEquipment(entity);
+        return MobEffectUtil.hasWaterBreathing(entity) 
+                || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_REFILLER_ITEM_TAG) 
+                || (this != RED && this.isProtectedViaBreathingEquipment(entity));
     }
 
     int getAirAmount(LivingEntity entity) {
