@@ -272,13 +272,18 @@ public class ThinAirConfig {
 
     public static AirQualityLevel getAirQualityAtLevelByDimension(ResourceLocation dimension, int y) {
         // Special handling for Overworld using the simple orangeAirStartY config
-        if (dimension.equals(ResourceLocation.withDefaultNamespace("overworld"))) {
+        ResourceLocation overworldId = ResourceLocation.withDefaultNamespace("overworld");
+        if (dimension != null && dimension.equals(overworldId)) {
             int orangeStartY = INSTANCE.orangeAirStartY.get();
+            ThinAir.LOGGER.debug("Overworld air check: Y={}, threshold={}, result={}", 
+                y, orangeStartY, y < orangeStartY ? "ORANGE" : "GREEN");
             if (y < orangeStartY) {
                 return AirQualityLevel.ORANGE;
             } else {
                 return AirQualityLevel.GREEN;
             }
+        } else if (dimension != null) {
+            ThinAir.LOGGER.debug("Non-overworld dimension: {}", dimension);
         }
 
         if (dimensionEntries == null) {
