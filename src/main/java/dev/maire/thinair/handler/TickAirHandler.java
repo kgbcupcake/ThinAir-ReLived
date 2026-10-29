@@ -35,7 +35,8 @@ public class TickAirHandler {
             event.setRefillAirAmount(airDelta);
         } else {
             event.setCanBreathe(true);
-            event.setRefillAirAmount(0);
+            event.setRefillAirAmount(
+                    airQualityLevel.getRefillAirAmountFromBreathingEquipment(entity, event.getRefillAirAmount()));
         }
     }
 }

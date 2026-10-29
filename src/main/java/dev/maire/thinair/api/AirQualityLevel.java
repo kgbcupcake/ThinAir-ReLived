@@ -154,9 +154,47 @@ public enum AirQualityLevel implements StringRepresentable {
         return this.isProtected(entity) ? 0 : this.getAirAmount(entity);
     }
 
+    /**
+     * Respirators don't just suppress air loss - they actively refill the bubble meter while worn in
+     * non-RED air, at the cost of durability proportional to the bubbles actually restored. This keeps
+     * a respirator put back on at low air from being a free full refill: the durability cost scales with
+     * how much air it actually hands back, not with how long it happened to be worn.
+     */
+    public int getRefillAirAmountFromBreathingEquipment(LivingEntity entity, int refillAirAmount) {
+        if (this.breathingEquipment == null
+                || this == RED
+                || MobEffectUtil.hasWaterBreathing(entity)
+                || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_REFILLER_ITEM_TAG)) {
+            return 0;
+        }
+
+        ItemStack itemStack = this.findEquippedBreathingEquipment(entity);
+        if (itemStack.isEmpty() || refillAirAmount <= 0) {
+            return 0;
+        }
+
+        int maxAirSupply = entity.getMaxAirSupply();
+        if (maxAirSupply > 0) {
+            int currentAirSupply = entity.getAirSupply();
+            int nextAirSupply = (int) Math.min(maxAirSupply, (long) currentAirSupply + refillAirAmount);
+            int bubblesRestored = getAirBubbleCount(nextAirSupply, maxAirSupply)
+                    - getAirBubbleCount(currentAirSupply, maxAirSupply);
+            if (bubblesRestored > 0) {
+                itemStack.hurtAndBreak(bubblesRestored, entity, EquipmentSlot.HEAD);
+            }
+        }
+
+        return refillAirAmount;
+    }
+
+    private static int getAirBubbleCount(int airSupply, int maxAirSupply) {
+        return (int) Math.ceil(Math.max(0, airSupply) * 10.0 / maxAirSupply);
+    }
+
     boolean isProtected(LivingEntity entity) {
         return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem()
-                .is(ModRegistry.AIR_REFILLER_ITEM_TAG) || this.isProtectedViaBreathingEquipment(entity);
+                .is(ModRegistry.AIR_REFILLER_ITEM_TAG) || this.isProtectedViaBreathingEquipment(entity)
+                || this.isProtectedViaBacktank(entity);
     }
 
     int getAirAmount(LivingEntity entity) {
@@ -190,34 +228,34 @@ public enum AirQualityLevel implements StringRepresentable {
     }
 
     private boolean isProtectedViaBreathingEquipment(LivingEntity entity) {
-        // Breathing equipment (respirators) should not work in RED air (underwater, etc.)
-        if (this == RED) {
+        // Breathing equipment (respirators) should not work in RED air (underwater, etc.) - that
+        // matches the original Thin Air mod's behavior, and air refill for it is handled separately
+        // by getRefillAirAmountFromBreathingEquipment.
+        if (this == RED || this.breathingEquipment == null) {
             return false;
         }
-        if (this.breathingEquipment != null) {
-            ItemStack itemStack = this.findEquippedBreathingEquipment(entity);
-            if (!itemStack.isEmpty() && entity.level().getGameTime() % (20 * 15) == 0) {
-                itemStack.hurtAndBreak(1, entity, EquipmentSlot.HEAD);
-            }
-            if (!itemStack.isEmpty()) {
+        return !this.findEquippedBreathingEquipment(entity).isEmpty();
+    }
+
+    /**
+     * Unlike respirators, Create's diving helmet + backtank combo is specifically meant to let you
+     * breathe underwater, so it's allowed to protect in RED air too.
+     */
+    private boolean isProtectedViaBacktank(LivingEntity entity) {
+        if (!ModList.get().isLoaded("create")) {
+            return false;
+        }
+        try {
+            java.util.List<ItemStack> backtanks = com.simibubi.create.content.equipment.armor.BacktankUtil
+                    .getAllWithAir(entity);
+            if (!backtanks.isEmpty()) {
+                if (entity.level().getGameTime() % 20 == 0) {
+                    com.simibubi.create.content.equipment.armor.BacktankUtil
+                            .consumeAir(entity, backtanks.getFirst(), 1);
+                }
                 return true;
             }
-        }
-        if (ModList.get().isLoaded("create")) {
-            try {
-                if (com.simibubi.create.content.equipment.armor.DivingHelmetItem.isWornBy(entity)) {
-                    java.util.List<ItemStack> backtanks = com.simibubi.create.content.equipment.armor.BacktankUtil
-                            .getAllWithAir(entity);
-                    if (!backtanks.isEmpty()) {
-                        if (entity.level().getGameTime() % 20 == 0) {
-                            com.simibubi.create.content.equipment.armor.BacktankUtil
-                                    .consumeAir(entity, backtanks.getFirst(), 1);
-                        }
-                        return true;
-                    }
-                }
-            } catch (NoClassDefFoundError ignored) {
-            }
+        } catch (NoClassDefFoundError ignored) {
         }
         return false;
     }

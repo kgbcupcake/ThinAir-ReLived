@@ -24,7 +24,7 @@ public class AirBubblePositionsCapability implements INBTSerializable<CompoundTa
     private Map<BlockPos, AirQualityLevel> airBubbleEntries = new LinkedHashMap<>();
 
     public Map<BlockPos, AirQualityLevel> getAirBubblePositionsView() {
-        return Collections.unmodifiableMap(this.airBubbleEntries);
+        return Collections.unmodifiableMap(new LinkedHashMap<>(this.airBubbleEntries));
     }
 
     public Map<BlockPos, AirQualityLevel> getAirBubblePositions() {
