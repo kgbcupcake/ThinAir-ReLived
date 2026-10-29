@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.7] - 2026/1-/29
+
 ### Fixed
 
 - Respirator air no longer gets stuck at the level it was when you put the respirator back on: it now actively refills the bubble meter while worn in non-RED air, spending durability in proportion to the bubbles actually restored rather than on a flat timer. Previously the respirator only paused air loss, so bubbles lost underwater (where the respirator doesn't help) could never climb back up while still below the orange/yellow air threshold, producing a discontinuity where air appeared to "reset" on every re-submerge ([#11](https://github.com/kgbcupcake/ThinAir-ReLived/issues/11))
