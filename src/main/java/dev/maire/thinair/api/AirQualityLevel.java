@@ -154,12 +154,6 @@ public enum AirQualityLevel implements StringRepresentable {
         return this.isProtected(entity) ? 0 : this.getAirAmount(entity);
     }
 
-    /**
-     * Respirators don't just suppress air loss - they actively refill the bubble meter while worn in
-     * non-RED air, at the cost of durability proportional to the bubbles actually restored. This keeps
-     * a respirator put back on at low air from being a free full refill: the durability cost scales with
-     * how much air it actually hands back, not with how long it happened to be worn.
-     */
     public int getRefillAirAmountFromBreathingEquipment(LivingEntity entity, int refillAirAmount) {
         if (this.breathingEquipment == null
                 || this == RED
@@ -169,7 +163,14 @@ public enum AirQualityLevel implements StringRepresentable {
         }
 
         ItemStack itemStack = this.findEquippedBreathingEquipment(entity);
-        if (itemStack.isEmpty() || refillAirAmount <= 0) {
+        if (itemStack.isEmpty()) {
+            return 0;
+        }
+
+        if (refillAirAmount <= 0 && this == RED) {
+            refillAirAmount = 4;
+        }
+        if (refillAirAmount <= 0) {
             return 0;
         }
 
@@ -192,9 +193,9 @@ public enum AirQualityLevel implements StringRepresentable {
     }
 
     boolean isProtected(LivingEntity entity) {
-        return MobEffectUtil.hasWaterBreathing(entity) || entity.isUsingItem() && entity.getUseItem()
-                .is(ModRegistry.AIR_REFILLER_ITEM_TAG) || this.isProtectedViaBreathingEquipment(entity)
-                || this.isProtectedViaBacktank(entity);
+        return MobEffectUtil.hasWaterBreathing(entity) 
+                || entity.isUsingItem() && entity.getUseItem().is(ModRegistry.AIR_REFILLER_ITEM_TAG) 
+                || (this != RED && this.isProtectedViaBreathingEquipment(entity));
     }
 
     int getAirAmount(LivingEntity entity) {
@@ -234,16 +235,11 @@ public enum AirQualityLevel implements StringRepresentable {
         if (this == RED || this.breathingEquipment == null) {
             return false;
         }
-        return !this.findEquippedBreathingEquipment(entity).isEmpty();
-    }
-
-    /**
-     * Unlike respirators, Create's diving helmet + backtank combo is specifically meant to let you
-     * breathe underwater, so it's allowed to protect in RED air too.
-     */
-    private boolean isProtectedViaBacktank(LivingEntity entity) {
-        if (!ModList.get().isLoaded("create")) {
-            return false;
+        if (this.breathingEquipment != null) {
+            ItemStack itemStack = this.findEquippedBreathingEquipment(entity);
+            if (!itemStack.isEmpty()) {
+                return true;
+            }
         }
         try {
             java.util.List<ItemStack> backtanks = com.simibubi.create.content.equipment.armor.BacktankUtil
