@@ -5,6 +5,7 @@ import dev.maire.thinair.advancements.criterion.BreatheAirTrigger;
 import dev.maire.thinair.advancements.criterion.SignalifyTorchTrigger;
 import dev.maire.thinair.advancements.criterion.UsedSoulfireTrigger;
 import dev.maire.thinair.world.item.AirBladderItem;
+import dev.maire.thinair.world.item.RespiratorItem;
 import dev.maire.thinair.world.item.SoulfireBottleItem;
 import dev.maire.thinair.world.level.block.SafetyLanternBlock;
 import dev.maire.thinair.world.level.block.SignalTorchBlock;
@@ -57,8 +58,8 @@ public class ModRegistry {
             ITEMS.register("soulfire_bottle", () -> new SoulfireBottleItem(new Item.Properties()));
     public static final DeferredItem<BlockItem> SAFETY_LANTERN_ITEM =
             ITEMS.register("safety_lantern", () -> new BlockItem(SAFETY_LANTERN_BLOCK.get(), new Item.Properties()));
-    public static final DeferredItem<Item> RESPIRATOR_ITEM =
-            ITEMS.register("respirator", () -> new Item(new Item.Properties().durability(77)));
+    public static final DeferredItem<RespiratorItem> RESPIRATOR_ITEM =
+            ITEMS.register("respirator", () -> new RespiratorItem(new Item.Properties().durability(77)));
 
     public static final DeferredHolder<CriterionTrigger<?>, BreatheAirTrigger> BREATHE_AIR_TRIGGER =
             TRIGGERS.register("breathe_air", BreatheAirTrigger::new);

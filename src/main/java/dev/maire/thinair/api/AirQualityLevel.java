@@ -229,8 +229,10 @@ public enum AirQualityLevel implements StringRepresentable {
     }
 
     private boolean isProtectedViaBreathingEquipment(LivingEntity entity) {
-        // Breathing equipment (respirators) should not work in RED air (underwater, etc.)
-        if (this == RED) {
+        // Breathing equipment (respirators) should not work in RED air (underwater, etc.) - that
+        // matches the original Thin Air mod's behavior, and air refill for it is handled separately
+        // by getRefillAirAmountFromBreathingEquipment.
+        if (this == RED || this.breathingEquipment == null) {
             return false;
         }
         if (this.breathingEquipment != null) {
@@ -239,21 +241,17 @@ public enum AirQualityLevel implements StringRepresentable {
                 return true;
             }
         }
-        if (ModList.get().isLoaded("create")) {
-            try {
-                if (com.simibubi.create.content.equipment.armor.DivingHelmetItem.isWornBy(entity)) {
-                    java.util.List<ItemStack> backtanks = com.simibubi.create.content.equipment.armor.BacktankUtil
-                            .getAllWithAir(entity);
-                    if (!backtanks.isEmpty()) {
-                        if (entity.level().getGameTime() % 20 == 0) {
-                            com.simibubi.create.content.equipment.armor.BacktankUtil
-                                    .consumeAir(entity, backtanks.getFirst(), 1);
-                        }
-                        return true;
-                    }
+        try {
+            java.util.List<ItemStack> backtanks = com.simibubi.create.content.equipment.armor.BacktankUtil
+                    .getAllWithAir(entity);
+            if (!backtanks.isEmpty()) {
+                if (entity.level().getGameTime() % 20 == 0) {
+                    com.simibubi.create.content.equipment.armor.BacktankUtil
+                            .consumeAir(entity, backtanks.getFirst(), 1);
                 }
-            } catch (NoClassDefFoundError ignored) {
+                return true;
             }
+        } catch (NoClassDefFoundError ignored) {
         }
         return false;
     }

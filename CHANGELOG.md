@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.7] - 2026/1-/29
+
+### Fixed
+
+- Respirator air no longer gets stuck at the level it was when you put the respirator back on: it now actively refills the bubble meter while worn in non-RED air, spending durability in proportion to the bubbles actually restored rather than on a flat timer. Previously the respirator only paused air loss, so bubbles lost underwater (where the respirator doesn't help) could never climb back up while still below the orange/yellow air threshold, producing a discontinuity where air appeared to "reset" on every re-submerge ([#11](https://github.com/kgbcupcake/ThinAir-ReLived/issues/11))
+- Create backtanks once again protect without requiring the Diving Helmet to be worn, and work in RED (underwater) air as intended, reverting the `DivingHelmetItem.isWornBy` requirement added for [#3](https://github.com/kgbcupcake/ThinAir-ReLived/issues/3): that requirement didn't stop the backtank on/off toggle exploit (equip for an instant, drain fractions of a second of tank air, remove) since the exploit relies on the equipped-this-tick check itself, not on which item grants it. Going back to the simpler backtank-only check is less convenient to game but no more exploitable, per [#11](https://github.com/kgbcupcake/ThinAir-ReLived/issues/11#issuecomment-6157189059)
+
 ## [1.0.6] - 2026-09-27
 
 ### Added
