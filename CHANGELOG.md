@@ -9,9 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.7] - 2026/1-/29
+### Removed
+
+- The Curios "back" slot and the ability to wear Create backtanks in it. It let players wear a second, invisible backtank on top of the normal chest-slot one, and backtanks already have their own armor slot. The 1.0.7 release removed the code that registered the slot, but the slot was still added by the mod's Curios data files; those are now removed too ([#15](https://github.com/kgbcupcake/ThinAir-ReLived/issues/15))
+
+## [1.0.7] - 2026-10-29
 
 ### Fixed
+
+- Crash that kicked players from the world with `Failed encoding custom payload thinair:chunk_air_quality` (`ConcurrentModificationException`). The chunk air-quality packet sent when a chunk loads held a live reference to the chunk's air-bubble map, which could change while the network thread was still encoding it; the packet now sends a snapshot ([#16](https://github.com/kgbcupcake/ThinAir-ReLived/issues/16))
+- The respirator can no longer be enchanted with Respiration. The enchantment had no effect when the respirator was worn in the Curios head slot ([#15](https://github.com/kgbcupcake/ThinAir-ReLived/issues/15))
 
 - Respirator air no longer gets stuck at the level it was when you put the respirator back on: it now actively refills the bubble meter while worn in non-RED air, spending durability in proportion to the bubbles actually restored rather than on a flat timer. Previously the respirator only paused air loss, so bubbles lost underwater (where the respirator doesn't help) could never climb back up while still below the orange/yellow air threshold, producing a discontinuity where air appeared to "reset" on every re-submerge ([#11](https://github.com/kgbcupcake/ThinAir-ReLived/issues/11))
 - Create backtanks once again protect without requiring the Diving Helmet to be worn, and work in RED (underwater) air as intended, reverting the `DivingHelmetItem.isWornBy` requirement added for [#3](https://github.com/kgbcupcake/ThinAir-ReLived/issues/3): that requirement didn't stop the backtank on/off toggle exploit (equip for an instant, drain fractions of a second of tank air, remove) since the exploit relies on the equipped-this-tick check itself, not on which item grants it. Going back to the simpler backtank-only check is less convenient to game but no more exploitable, per [#11](https://github.com/kgbcupcake/ThinAir-ReLived/issues/11#issuecomment-6157189059)
@@ -159,7 +166,9 @@ First release of the NeoForge 1.21.1 port by [Marie (kgbcupcake)](https://github
 
 - Bundled compatibility layers for Create and other mods (compatibility remains optional and separate, matching port goals)
 
-[Unreleased]: https://github.com/kgbcupcake/ThinAir-ReLived/compare/v1.0.4...HEAD
+[Unreleased]: https://github.com/kgbcupcake/ThinAir-ReLived/compare/v1.0.7...HEAD
+[1.0.7]: https://github.com/kgbcupcake/ThinAir-ReLived/compare/v1.0.6...v1.0.7
+[1.0.6]: https://github.com/kgbcupcake/ThinAir-ReLived/compare/v1.0.4...v1.0.6
 [1.0.4]: https://github.com/kgbcupcake/ThinAir-ReLived/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/kgbcupcake/ThinAir-ReLived/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/kgbcupcake/ThinAir-ReLived/compare/v1.0.1...v1.0.2

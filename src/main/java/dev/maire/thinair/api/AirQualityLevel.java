@@ -3,7 +3,6 @@ package dev.maire.thinair.api;
 import dev.maire.thinair.ThinAir;
 import dev.maire.thinair.config.ThinAirConfig;
 import dev.maire.thinair.init.ModRegistry;
-import dev.maire.thinair.world.level.block.SafetyLanternBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
@@ -271,9 +270,6 @@ public enum AirQualityLevel implements StringRepresentable {
     public static AirQualityLevel getAirQualityFromBlock(BlockState blockState) {
         if (blockState.hasProperty(BlockStateProperties.LIT) && !blockState.getValue(BlockStateProperties.LIT)) {
             return null;
-        }
-        if (blockState.hasProperty(SafetyLanternBlock.AIR_QUALITY)) {
-            return blockState.getValue(SafetyLanternBlock.AIR_QUALITY);
         }
         for (AirQualityLevel airQualityLevel : AirQualityLevel.values()) {
             if (blockState.is(airQualityLevel.airProviders)) {

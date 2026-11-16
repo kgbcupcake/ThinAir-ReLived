@@ -271,16 +271,6 @@ public class ThinAirConfig {
     }
 
     public static AirQualityLevel getAirQualityAtLevelByDimension(ResourceLocation dimension, int y) {
-        // Special handling for Overworld using the simple orangeAirStartY config
-        ResourceLocation overworldId = ResourceLocation.withDefaultNamespace("overworld");
-        if (dimension != null && dimension.equals(overworldId)) {
-            int orangeStartY = INSTANCE.orangeAirStartY.get();
-            if (y < orangeStartY) {
-                return AirQualityLevel.ORANGE;
-            }
-            return AirQualityLevel.GREEN;
-        }
-
         if (dimensionEntries == null) {
             var lines = INSTANCE.dimensions.get();
             dimensionEntries = new HashMap<>(lines.size());
@@ -294,7 +284,19 @@ public class ThinAirConfig {
             }
         }
 
-        return getAirQualityAtLevel(dimensionEntries.get(dimension), y, AirQualityLevel.GREEN);
+        AirQualityEntry entry = dimensionEntries.get(dimension);
+
+        // The orangeAirStartY setting overrides where the Overworld profile's first height band
+        // begins, so changing it doesn't require editing the full "dimensions" config string.
+        // Bands above that (e.g. 128:yellow) still come from the configured profile.
+        ResourceLocation overworldId = ResourceLocation.withDefaultNamespace("overworld");
+        if (dimension != null && dimension.equals(overworldId) && entry != null && !entry.heights().isEmpty()) {
+            List<Pair<Integer, AirQualityLevel>> heights = new ArrayList<>(entry.heights());
+            heights.set(0, Pair.of(INSTANCE.orangeAirStartY.get(), heights.get(0).getRight()));
+            entry = new AirQualityEntry(entry.baseQuality(), heights);
+        }
+
+        return getAirQualityAtLevel(entry, y, AirQualityLevel.GREEN);
     }
 
     @Nullable
