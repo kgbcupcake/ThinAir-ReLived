@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Air-provider blocks (including blocks added to the `*_air_providers` tags) having no effect in areas where Safety Lanterns had been placed on 1.0.7 or earlier. Those versions saved every Safety Lantern as an air provider of whatever colour it was showing, so a green lantern in the Overworld projected green air that beat every other provider nearby. Lanterns are no longer providers, but the saved entries were never removed; they are now cleaned up when a chunk loads and whenever the block at that position changes
+- Air-bubble chunk scanning and Safety Lantern refreshes were tracked by chunk position only, so chunks at the same coordinates in different dimensions could be mixed up (a scan or lantern refresh queued for one dimension being consumed by another). They are now tracked per dimension
+
 ### Removed
 
 - The Curios "back" slot and the ability to wear Create backtanks in it. It let players wear a second, invisible backtank on top of the normal chest-slot one, and backtanks already have their own armor slot. The 1.0.7 release removed the code that registered the slot, but the slot was still added by the mod's Curios data files; those are now removed too ([#15](https://github.com/kgbcupcake/ThinAir-ReLived/issues/15))
